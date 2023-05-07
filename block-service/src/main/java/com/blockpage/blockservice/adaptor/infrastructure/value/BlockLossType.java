@@ -5,11 +5,14 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum BlockObtainType {
-    CASH(0, "현금"),
-    GAME(1, "게임"),
-    ATTENDANCE(2, "출석"),
+public enum BlockLossType {
+    WEBTOON(0, "웹툰"),
+    EPISODE_BM(1 ,"에피소드"),
+    PROFILE_SKIN(2, "프로필 스킨"),
+    NFT(3, "NFT"),
     ;
+
     private int key;
     private String value;
+
 }
