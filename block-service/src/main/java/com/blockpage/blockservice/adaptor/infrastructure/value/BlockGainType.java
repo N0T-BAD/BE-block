@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum BlockObtainType {
+public enum BlockGainType {
     CASH(0, "현금"),
     GAME(1, "게임"),
     ATTENDANCE(2, "출석"),

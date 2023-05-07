@@ -1,6 +1,6 @@
 package com.blockpage.blockservice.adaptor.infrastructure.entity;
 
-import com.blockpage.blockservice.adaptor.infrastructure.value.BlockObtainType;
+import com.blockpage.blockservice.adaptor.infrastructure.value.BlockGainType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +23,7 @@ public class BlockEntity {
     @Column
     private Integer blockQuantity;
     @Column
-    private BlockObtainType blockObtainType;
+    private BlockGainType blockGainType;
     @Column
     private Boolean blockValidate;
     @Column
