@@ -42,11 +42,11 @@ public class PaymentHistoryView {
         this.blockGainType = blockGainType;
     }
 
-    //author
-    public PaymentHistoryView(Long memberId, Integer blockQuantity, Long episodeId, Long won) {
+    //author-episode
+    public PaymentHistoryView(Long memberId, Integer blockQuantity,BlockLossType blockLossType, Long productId, Long won) {
         this.memberId = memberId;
         this.blockQuantity = blockQuantity;
-        this.productDescription = new productDescription(BlockLossType.EPISODE_BM.toString(), episodeId);
+        this.productDescription = new productDescription(blockLossType.toString(), productId);
         this.won = won;
     }
 

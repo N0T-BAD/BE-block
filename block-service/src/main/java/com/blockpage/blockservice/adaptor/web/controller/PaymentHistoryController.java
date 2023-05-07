@@ -63,7 +63,7 @@ public class PaymentHistoryController {
 
             case "author": {
                 return ResponseEntity.status(HttpStatus.OK)
-                    .body(new ApiWrapperResponse(new PaymentHistoryView(1L, 502328, 1L, 500000000L)));
+                    .body(new ApiWrapperResponse(new PaymentHistoryView(1L, 502328, BlockLossType.EPISODE_BM, 1L, 500000000L)));
             }
         }
         return ResponseEntity.status(HttpStatus.OK)
