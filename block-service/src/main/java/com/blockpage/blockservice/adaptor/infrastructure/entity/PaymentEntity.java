@@ -13,8 +13,8 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "payment_history")
-public class PaymentHistoryEntity {
+@Table(name = "payment")
+public class PaymentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
