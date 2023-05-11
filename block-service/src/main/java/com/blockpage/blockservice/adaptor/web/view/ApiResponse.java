@@ -7,17 +7,17 @@ import lombok.ToString;
 @Getter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiWrapperResponse<T> {
+public class ApiResponse<T> {
 
     private final T data;
     private final Meta meta;
 
-    public ApiWrapperResponse(T data, Meta meta) {
+    public ApiResponse(T data, Meta meta) {
         this.data = data;
         this.meta = meta;
     }
 
-    public ApiWrapperResponse(T data) {
+    public ApiResponse(T data) {
         this.data = data;
         this.meta = null;
     }
