@@ -3,7 +3,7 @@ package com.blockpage.blockservice.adaptor.web.controller;
 import com.blockpage.blockservice.adaptor.infrastructure.value.BlockGainType;
 import com.blockpage.blockservice.adaptor.infrastructure.value.BlockLossType;
 import com.blockpage.blockservice.adaptor.infrastructure.value.PaymentHistoryType;
-import com.blockpage.blockservice.adaptor.web.apispec.ApiWrapperResponse;
+import com.blockpage.blockservice.adaptor.web.view.ApiWrapperResponse;
 import com.blockpage.blockservice.adaptor.web.apispec.PaymentHistoryRequest;
 import com.blockpage.blockservice.adaptor.web.view.PaymentHistoryView;
 import java.util.ArrayList;

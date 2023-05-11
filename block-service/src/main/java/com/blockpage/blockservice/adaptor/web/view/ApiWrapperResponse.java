@@ -1,4 +1,4 @@
-package com.blockpage.blockservice.adaptor.web.apispec;
+package com.blockpage.blockservice.adaptor.web.view;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

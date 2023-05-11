@@ -1,6 +1,6 @@
 package com.blockpage.blockservice.adaptor.web.controller;
 
-import com.blockpage.blockservice.adaptor.web.apispec.ApiWrapperResponse;
+import com.blockpage.blockservice.adaptor.web.view.ApiWrapperResponse;
 import com.blockpage.blockservice.adaptor.web.apispec.BlockRequest;
 import com.blockpage.blockservice.adaptor.web.view.MemberBlockView;
 
