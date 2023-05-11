@@ -28,8 +28,7 @@ public class BlockService implements BlockUseCase {
             .collect(Collectors.toList());
 
         Integer totalBlocks = blocks.stream()
-            .filter(Block::isExpired)
-            .filter(Block::getBlockValidate)
+            .filter(Block::isValid)
             .map(Block::getBlockQuantity)
             .reduce(Integer::sum)
             .get();
@@ -53,6 +52,7 @@ public class BlockService implements BlockUseCase {
         /*
         추가 개발 필요
          */
+        List<Block> consumeBlocks = Block.comsumeBlockList(blocks, query.getBlockQuantity());
 
     }
 
