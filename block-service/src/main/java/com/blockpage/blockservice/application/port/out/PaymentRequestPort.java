@@ -5,7 +5,7 @@ import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayRea
 import com.blockpage.blockservice.application.service.BlockService.KakaoPayApproveDto;
 import com.blockpage.blockservice.application.service.BlockService.KakaoPayReadyDto;
 
-public interface PaymentPort {
+public interface PaymentRequestPort {
 
     KakaoPayReadyDto ready(KakaoPayReadyParams kakaoPayReadyParams);
 

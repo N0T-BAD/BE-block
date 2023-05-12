@@ -6,10 +6,10 @@ import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayApprov
 import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayReadyResponse;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import com.blockpage.blockservice.application.port.in.BlockUseCase;
-import com.blockpage.blockservice.application.port.out.BlockPort;
-import com.blockpage.blockservice.application.port.out.BlockPort.BlockEntityDto;
-import com.blockpage.blockservice.application.port.out.PaymentPort;
-import com.blockpage.blockservice.application.port.out.PaymentReceiptPort;
+import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
+import com.blockpage.blockservice.application.port.out.BlockPersistencePort.BlockEntityDto;
+import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
+import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
 import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDate;
 import java.util.List;
@@ -31,13 +31,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class BlockService implements BlockUseCase {
 
-    private final BlockPort blockPort;
-    private final PaymentPort paymentPort;
-    private final PaymentReceiptPort paymentReceiptPort;
+    private final BlockPersistencePort blockPersistencePort;
+    private final PaymentRequestPort paymentRequestPort;
+    private final PaymentCachingPort paymentCachingPort;
 
     @Override
     public BlockQueryDto findAllBlock(FindBlockQuery query) {
-        List<BlockEntityDto> blockEntityDtoList = blockPort.getMemberBlock(query.getMemberId());
+        List<BlockEntityDto> blockEntityDtoList = blockPersistencePort.getMemberBlock(query.getMemberId());
         List<Block> blocks = blockEntityDtoList.stream()
             .map(Block::initBlockFromEntityDto)
             .collect(Collectors.toList());
@@ -50,13 +50,13 @@ public class BlockService implements BlockUseCase {
     @Transactional
     public void createBlock(ChargeBlockQuery query) {
         Block block = Block.initBlockForCharge(query);
-        blockPort.saveBlock(block);
+        blockPersistencePort.saveBlock(block);
     }
 
     @Override
     @Transactional
     public void updateBlock(UpdateBlockQuery query) {
-        List<BlockEntity> blockEntityList = blockPort.updateBlockQuantity(query.getMemberId());
+        List<BlockEntity> blockEntityList = blockPersistencePort.updateBlockQuantity(query.getMemberId());
         List<Block> blocks = blockEntityList.stream()
             .map(Block::initBlockFromEntity)
             .collect(Collectors.toList());
@@ -76,18 +76,18 @@ public class BlockService implements BlockUseCase {
     public KakaoPayReadyDto kakaoPayReady(KakaoReadyQuery query) {
         String orderNumber = createOrderNumber(query.getMemberId());
         KakaoPayReadyParams kakaoPayReadyParams = KakaoPayReadyParams.addEssentialParams(query, orderNumber);
-        KakaoPayReadyDto response = paymentPort.ready(kakaoPayReadyParams);
+        KakaoPayReadyDto response = paymentRequestPort.ready(kakaoPayReadyParams);
         System.out.println("orderNumber = " + orderNumber);
-        paymentReceiptPort.savePaymentReceipt(new PaymentOutDto(query, response, orderNumber));
+        paymentCachingPort.savePaymentReceipt(new PaymentOutDto(query, response, orderNumber));
         return response;
     }
 
     @Override
     public KakaoPayApproveDto kakaoPayApprove(KakaoApproveQuery query) {
-        PaymentOutDto receipt = paymentReceiptPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
+        PaymentOutDto receipt = paymentCachingPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
         System.out.println("receipt = " + receipt);
         KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
-        KakaoPayApproveDto response = paymentPort.approval(kakaoPayApprovalParams);
+        KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
         return response;
     }
 

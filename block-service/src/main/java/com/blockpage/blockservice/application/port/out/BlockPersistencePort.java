@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
-public interface BlockPort {
+public interface BlockPersistencePort {
 
     List<BlockEntityDto> getMemberBlock(Long memberId);
     BlockEntityDto saveBlock(Block block);
