@@ -51,37 +51,3 @@ public class BlockController {
             .body(new ApiResponse("블럭이 생성되었습니다."));
     }
 }
-
-// switch (type) {
-//     case "attendance": {
-//     //attendance 내역 생성 포트 + DTO 매핑 함수
-//     System.out.println("purchaseRequest : attendance = " + blockRequest.toString());
-//     }
-//     break;
-//     case "charge": {
-//     //charge 내역 생성 포트 + DTO 매핑 함수
-//     System.out.println("purchaseRequest : charge = " + blockRequest.toString());
-//     }
-//     break;
-//
-//     case "refund": {
-//     //refund 내역 생성 포트 + DTO 매핑 함수
-//     System.out.println("purchaseRequest : refund = " + blockRequest.toString());
-//     }
-//     break;
-//     case "episode-bm": {
-//     //episode-bm 내역 생성 포트 + DTO 매핑 함수
-//     System.out.println("purchaseRequest : episode-bm = " + blockRequest.toString());
-//     }
-//     break;
-//     case "nft": {
-//     //nft 내역 생성 포트 + DTO 매핑 함수
-//     System.out.println("purchaseRequest : nft = " + blockRequest.toString());
-//     }
-//     break;
-//     case "profile-skin": {
-//     //nft 내역 생성 포트 + DTO 매핑 함수
-//     System.out.println("purchaseRequest : profile-skin = " + blockRequest.toString());
-//     }
-//     break;
-//     }
