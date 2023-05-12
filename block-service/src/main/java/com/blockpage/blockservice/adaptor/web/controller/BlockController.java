@@ -32,10 +32,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/blocks")
 public class BlockController {
 
-    private long MEMBER_TEST_ID = 1L;
-    private String KAKAO_PAY = "kakaopay";
-    private String KAKAO_PAY_READY = "ready";
-    private String KAKAO_PAY_APPROVE = "approve";
+    private final long MEMBER_TEST_ID = 1L;
+    private final String KAKAO_PAY = "kakaopay";
+    private final String KAKAO_PAY_READY = "ready";
+    private final String KAKAO_PAY_APPROVE = "approve";
+
 
     private final BlockUseCase blockUseCase;
 
