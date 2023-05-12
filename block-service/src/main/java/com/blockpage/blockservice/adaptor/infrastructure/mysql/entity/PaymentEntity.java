@@ -1,6 +1,6 @@
-package com.blockpage.blockservice.adaptor.infrastructure.entity;
+package com.blockpage.blockservice.adaptor.infrastructure.mysql.entity;
 
-import com.blockpage.blockservice.adaptor.infrastructure.value.BlockLossType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

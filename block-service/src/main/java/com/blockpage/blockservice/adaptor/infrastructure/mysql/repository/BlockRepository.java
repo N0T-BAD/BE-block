@@ -1,6 +1,6 @@
-package com.blockpage.blockservice.adaptor.infrastructure.repository;
+package com.blockpage.blockservice.adaptor.infrastructure.mysql.repository;
 
-import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

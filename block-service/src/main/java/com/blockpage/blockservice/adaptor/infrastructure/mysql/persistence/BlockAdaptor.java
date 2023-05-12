@@ -1,7 +1,7 @@
-package com.blockpage.blockservice.adaptor.infrastructure.persistence;
+package com.blockpage.blockservice.adaptor.infrastructure.mysql.persistence;
 
-import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
-import com.blockpage.blockservice.adaptor.infrastructure.repository.BlockRepository;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.repository.BlockRepository;
 import com.blockpage.blockservice.application.port.out.BlockPort;
 import com.blockpage.blockservice.domain.Block;
 import java.util.List;
