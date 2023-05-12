@@ -1,4 +1,4 @@
-package com.blockpage.blockservice.adaptor.web.apispec;
+package com.blockpage.blockservice.adaptor.web.requestbody;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

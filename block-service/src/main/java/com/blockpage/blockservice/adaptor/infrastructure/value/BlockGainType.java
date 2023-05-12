@@ -1,15 +1,23 @@
 package com.blockpage.blockservice.adaptor.infrastructure.value;
 
+import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
 public enum BlockGainType {
-    CASH(0, "현금"),
-    GAME(1, "게임"),
-    ATTENDANCE(2, "출석"),
+    GAME(0, "game"),
+    ATTENDANCE(1, "attendance"),
+    CASH(2, "cash"),
     ;
     private int key;
     private String value;
+
+    public static BlockGainType findByValue(String value) {
+        return Arrays.stream(BlockGainType.values())
+            .filter(t -> t.getValue().equals(value))
+            .findFirst()
+            .get();
+    }
 }

@@ -2,7 +2,7 @@ package com.blockpage.blockservice.adaptor.web.controller;
 
 
 import com.blockpage.blockservice.adaptor.infrastructure.value.BlockLossType;
-import com.blockpage.blockservice.adaptor.web.apispec.ApiWrapperResponse;
+import com.blockpage.blockservice.adaptor.web.view.ApiResponse;
 import com.blockpage.blockservice.adaptor.web.view.AdminPaymentHistoryView;
 import com.blockpage.blockservice.adaptor.web.view.PaymentHistoryView;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ public class OperationController {
      * Mock Data 작업중 (서비스 로직 없음) block 도메인과 paymentHistory 도메인이 결합 되어야함.
      */
     @GetMapping
-    public ResponseEntity<ApiWrapperResponse> getOrderHistory() {
+    public ResponseEntity<ApiResponse> getOrderHistory() {
         List<PaymentHistoryView> paymentHistoryViews = new ArrayList<>();
         paymentHistoryViews.add(new PaymentHistoryView(1L, 502328, BlockLossType.WEBTOON, 1L, 504619615L));
         paymentHistoryViews.add(new PaymentHistoryView(2L, 15615615, BlockLossType.WEBTOON, 2L, 1651561560L));
@@ -36,6 +36,6 @@ public class OperationController {
             paymentHistoryViews);
 
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new ApiWrapperResponse(result));
+            .body(new ApiResponse(result));
     }
 }

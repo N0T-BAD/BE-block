@@ -1,17 +1,26 @@
 package com.blockpage.blockservice.adaptor.infrastructure.entity;
 
 import com.blockpage.blockservice.adaptor.infrastructure.value.BlockGainType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "block")
 public class BlockEntity {
 
@@ -23,9 +32,24 @@ public class BlockEntity {
     @Column
     private Integer blockQuantity;
     @Column
+    @Enumerated(EnumType.STRING)
     private BlockGainType blockGainType;
     @Column
     private Boolean blockValidate;
     @Column
     private LocalDateTime expiredDate;
+
+    public void changeQuantity(Integer blockQuantity) {
+        this.blockQuantity = blockQuantity;
+    }
+
+    public static BlockEntity toEntity(Block block) {
+        return BlockEntity.builder()
+            .memberId(block.getMemberId())
+            .blockQuantity(block.getBlockQuantity())
+            .blockGainType(BlockGainType.findByValue(block.getBlockGainType().getValue()))
+            .blockValidate(block.getBlockValidate())
+            .expiredDate(block.getExpiredDate())
+            .build();
+    }
 }
