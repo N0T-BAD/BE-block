@@ -30,9 +30,7 @@ public class BlockAdaptor implements BlockPort {
     }
 
     @Override
-    public List<BlockEntityDto> updateBlock(Block block) {
-        //개발 필요
-        return null;
+    public List<BlockEntity> updateBlockQuantity(Long memberId) {
+        return blockRepository.findByMemberId(memberId);
     }
-
 }
