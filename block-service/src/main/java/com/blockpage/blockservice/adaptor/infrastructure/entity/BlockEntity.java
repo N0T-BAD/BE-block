@@ -5,6 +5,8 @@ import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,17 +32,22 @@ public class BlockEntity {
     @Column
     private Integer blockQuantity;
     @Column
+    @Enumerated(EnumType.STRING)
     private BlockGainType blockGainType;
     @Column
     private Boolean blockValidate;
     @Column
     private LocalDateTime expiredDate;
 
+    public void changeQuantity(Integer blockQuantity) {
+        this.blockQuantity = blockQuantity;
+    }
+
     public static BlockEntity toEntity(Block block) {
         return BlockEntity.builder()
             .memberId(block.getMemberId())
             .blockQuantity(block.getBlockQuantity())
-            .blockGainType(block.getBlockGainType())
+            .blockGainType(BlockGainType.findByValue(block.getBlockGainType().getValue()))
             .blockValidate(block.getBlockValidate())
             .expiredDate(block.getExpiredDate())
             .build();
