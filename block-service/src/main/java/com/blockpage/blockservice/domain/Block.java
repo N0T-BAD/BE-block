@@ -1,5 +1,6 @@
 package com.blockpage.blockservice.domain;
 
+import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
 import com.blockpage.blockservice.application.port.in.BlockUseCase.ChargeBlockQuery;
 import com.blockpage.blockservice.application.port.out.BlockPort.BlockEntityDto;
 import java.time.LocalDateTime;
@@ -25,6 +26,9 @@ public class Block {
     private LocalDateTime expiredDate;
 
     public static List<Block> comsumeBlockList(List<Block> blocks, Integer blockQuantity) {
+        if (getTotalBlock(blocks) < blockQuantity) {
+            throw new RuntimeException();
+        }
         List<Block> sortedBlocks = blocks.stream()
             .filter(Block::isValid)
             .sorted(Comparator.comparing(b -> b.getBlockGainType().getKey()))
@@ -32,8 +36,9 @@ public class Block {
 
         List<Block> consumeBlock = new ArrayList<>();
         for (Block block : sortedBlocks) {
-            if (blockQuantity - block.getBlockQuantity() <= 0) {
-                block.minusQuantity(block.getBlockQuantity() - blockQuantity);
+            blockQuantity -= block.getBlockQuantity();
+            if (blockQuantity <= 0) {
+                block.minusQuantity(block.getBlockQuantity() + blockQuantity);
                 consumeBlock.add(block);
                 break;
             }
@@ -41,6 +46,14 @@ public class Block {
             consumeBlock.add(block);
         }
         return consumeBlock;
+    }
+
+    public static Integer getTotalBlock(List<Block> blocks) {
+        return blocks.stream()
+            .filter(Block::isValid)
+            .map(Block::getBlockQuantity)
+            .reduce(Integer::sum)
+            .get();
     }
 
     private void minusQuantity(Integer blockQuantity) {
@@ -74,7 +87,18 @@ public class Block {
             .build();
     }
 
-    enum GainType {
+    public static Block initBlockFromEntity(BlockEntity blockEntity) {
+        return Block.builder()
+            .blockId(blockEntity.getId())
+            .memberId(blockEntity.getMemberId())
+            .blockGainType(GainType.findByValue(blockEntity.getBlockGainType().getValue()))
+            .blockQuantity(blockEntity.getBlockQuantity())
+            .blockValidate(blockEntity.getBlockValidate())
+            .expiredDate(blockEntity.getExpiredDate())
+            .build();
+    }
+
+    public enum GainType {
         GAME(0, "game"),
         ATTENDANCE(1, "attendance"),
         CASH(2, "cash"),
