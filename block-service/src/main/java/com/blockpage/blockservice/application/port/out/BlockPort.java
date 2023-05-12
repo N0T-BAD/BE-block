@@ -2,8 +2,6 @@ package com.blockpage.blockservice.application.port.out;
 
 import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
 import com.blockpage.blockservice.adaptor.infrastructure.value.BlockGainType;
-import com.blockpage.blockservice.application.port.in.BlockUseCase.FindBlockQuery;
-import com.blockpage.blockservice.application.port.in.BlockUseCase.UpdateBlockQuery;
 import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,7 +12,7 @@ public interface BlockPort {
 
     List<BlockEntityDto> getMemberBlock(Long memberId);
     BlockEntityDto saveBlock(Block block);
-    List<BlockEntityDto> updateBlock(Block block);
+    List<BlockEntity> updateBlockQuantity(Long memberId);
 
     @Builder
     @Getter
