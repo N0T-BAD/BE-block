@@ -1,6 +1,6 @@
 package com.blockpage.blockservice.domain;
 
-import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import com.blockpage.blockservice.application.port.in.BlockUseCase.ChargeBlockQuery;
 import com.blockpage.blockservice.application.port.out.BlockPort.BlockEntityDto;
 import java.time.LocalDateTime;

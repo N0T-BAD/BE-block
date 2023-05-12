@@ -1,7 +1,7 @@
 package com.blockpage.blockservice.application.port.out;
 
-import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
-import com.blockpage.blockservice.adaptor.infrastructure.value.BlockGainType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDateTime;
 import java.util.List;
