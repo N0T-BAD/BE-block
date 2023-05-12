@@ -1,18 +1,25 @@
 package com.blockpage.blockservice.application.service;
 
+import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayApprovalParams;
 import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayReadyParams;
+import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayApprovalResponse;
 import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayReadyResponse;
-import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import com.blockpage.blockservice.application.port.in.BlockUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPort;
 import com.blockpage.blockservice.application.port.out.BlockPort.BlockEntityDto;
 import com.blockpage.blockservice.application.port.out.PaymentPort;
+import com.blockpage.blockservice.application.port.out.PaymentReceiptPort;
 import com.blockpage.blockservice.domain.Block;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +33,7 @@ public class BlockService implements BlockUseCase {
 
     private final BlockPort blockPort;
     private final PaymentPort paymentPort;
+    private final PaymentReceiptPort paymentReceiptPort;
 
     @Override
     public BlockQueryDto findAllBlock(FindBlockQuery query) {
@@ -65,16 +73,22 @@ public class BlockService implements BlockUseCase {
     }
 
     @Override
-    public KakaoPayReadyDto kakaoPayReady(KakaoReadyQuery kakaoReadyQuery) {
-        KakaoPayReadyParams kakaoPayReadyParams = KakaoPayReadyParams.addEssentialParams(kakaoReadyQuery, "1");
+    public KakaoPayReadyDto kakaoPayReady(KakaoReadyQuery query) {
+        String orderNumber = createOrderNumber(query.getMemberId());
+        KakaoPayReadyParams kakaoPayReadyParams = KakaoPayReadyParams.addEssentialParams(query, orderNumber);
         KakaoPayReadyDto response = paymentPort.ready(kakaoPayReadyParams);
-
+        System.out.println("orderNumber = " + orderNumber);
+        paymentReceiptPort.savePaymentReceipt(new PaymentOutDto(query, response, orderNumber));
         return response;
     }
 
     @Override
-    public KakaoPayApproveDto kakaoPayApprove(KakaoApproveQuery kakaoApproveQuery) {
-        return null;
+    public KakaoPayApproveDto kakaoPayApprove(KakaoApproveQuery query) {
+        PaymentOutDto receipt = paymentReceiptPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
+        System.out.println("receipt = " + receipt);
+        KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
+        KakaoPayApproveDto response = paymentPort.approval(kakaoPayApprovalParams);
+        return response;
     }
 
     @Getter
@@ -105,31 +119,63 @@ public class BlockService implements BlockUseCase {
     @AllArgsConstructor
     public static class KakaoPayApproveDto {
 
-        private String aid;
         private String tid;
         private String cid;
-        private String sid;
         private String partner_order_id;
         private String partner_user_id;
         private String payment_method_type;
-        private Amount amount;
+        private Integer amount;
         private String item_name;
-        private String item_code;
         private int quantity;
         private String created_at;
         private String approved_at;
-        private String payload;
+
+        public KakaoPayApproveDto(KakaoPayApprovalResponse response) {
+            this.tid = response.getTid();
+            this.cid = response.getCid();
+            this.partner_order_id = response.getPartner_order_id();
+            this.partner_user_id = response.getPartner_user_id();
+            this.payment_method_type = response.getPayment_method_type();
+            this.amount = response.getAmount().getTotal();
+            this.item_name = response.getItem_name();
+            this.quantity = response.getQuantity();
+            this.created_at = response.getCreated_at();
+            this.approved_at = response.getApproved_at();
+        }
     }
 
     @Getter
+    @ToString
     @AllArgsConstructor
-    private class Amount {
+    public static class PaymentOutDto {
 
-        private int total; // 총  금액
-        private int tax_free; // 비과세 금액
-        private int tax; // 부가세 금액
-        private int point; // 사용한 포인트
-        private int discount; // 할인금액
-        private int green_deposit; // 컵 보증금
+        private String memberId;
+        private String tid;
+        private String orderId;
+
+        private String itemName;
+        private String quantity;
+        private String totalAmount;
+
+        public PaymentOutDto(KakaoReadyQuery query, KakaoPayReadyDto dto, String orderNumber) {
+            this.orderId = orderNumber;
+            this.tid = dto.getTid();
+            this.memberId = query.getMemberId().toString();
+            this.itemName = query.getItemName();
+            this.quantity = query.getQuantity().toString();
+            this.totalAmount = query.getTotalAmount().toString();
+        }
+    }
+
+    public String createOrderNumber(Long memberId) {
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+
+        String yyyyMmDd = LocalDate.now().toString().replace("-", "");
+        String randomNumbers = Stream.generate(() -> random.nextInt(1, 10))
+            .limit(6)
+            .map(String::valueOf)
+            .collect(Collectors.joining());
+        return yyyyMmDd + memberId.toString() + randomNumbers;
     }
 }
