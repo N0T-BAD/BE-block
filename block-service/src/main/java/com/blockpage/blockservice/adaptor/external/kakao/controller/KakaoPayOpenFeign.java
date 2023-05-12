@@ -1,6 +1,8 @@
 package com.blockpage.blockservice.adaptor.external.kakao.controller;
 
 import com.blockpage.blockservice.adaptor.external.kakao.configuration.KakaoOpenFeignConfig;
+import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayApprovalParams;
+import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayApprovalResponse;
 import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayReadyParams;
 import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayReadyResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,7 +16,6 @@ public interface KakaoPayOpenFeign {
     @PostMapping(value = "/v1/payment/ready")
     KakaoPayReadyResponse ready(@SpringQueryMap KakaoPayReadyParams kakaoPayReadyParams);
 
-//    @PostMapping(value = "/v1/payment/approve")
-//    KakaoPayApprovalResponse approval(@SpringQueryMap KakaoPayApprovalParams kakaoPayApprovalParams);
-
+    @PostMapping(value = "/v1/payment/approve")
+    KakaoPayApprovalResponse approval(@SpringQueryMap KakaoPayApprovalParams kakaoPayApprovalParams);
 }
