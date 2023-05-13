@@ -8,7 +8,5 @@ import com.blockpage.blockservice.application.service.BlockService.KakaoPayReady
 public interface PaymentRequestPort {
 
     KakaoPayReadyDto ready(KakaoPayReadyParams kakaoPayReadyParams);
-
     KakaoPayApproveDto approval(KakaoPayApprovalParams kakaoPayApprovalParams);
-
 }
