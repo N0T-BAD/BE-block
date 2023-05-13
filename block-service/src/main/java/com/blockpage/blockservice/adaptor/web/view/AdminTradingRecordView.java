@@ -7,22 +7,22 @@ import lombok.Getter;
 
 @Getter
 @JsonInclude(Include.NON_NULL)
-public class AdminPaymentHistoryView {
+public class AdminTradingRecordView {
 
     private Long cashBlocks;
     private Long attendanceBlocks;
     private Long gameBlocks;
     private Long totalBlocks;
     private Long totalIncome;
-    private List<PaymentHistoryView> paymentHistoryViews;
+    private List<TradingRecordView> tradingRecordViews;
 
-    public AdminPaymentHistoryView(Long cashBlocks, Long attendanceBlocks, Long gameBlocks, Long totalBlocks, Long totalIncome,
-        List<PaymentHistoryView> paymentHistoryViews) {
+    public AdminTradingRecordView(Long cashBlocks, Long attendanceBlocks, Long gameBlocks, Long totalBlocks, Long totalIncome,
+        List<TradingRecordView> tradingRecordViews) {
         this.cashBlocks = cashBlocks;
         this.attendanceBlocks = attendanceBlocks;
         this.gameBlocks = gameBlocks;
         this.totalBlocks = totalBlocks;
         this.totalIncome = totalIncome;
-        this.paymentHistoryViews = paymentHistoryViews;
+        this.tradingRecordViews = tradingRecordViews;
     }
 }

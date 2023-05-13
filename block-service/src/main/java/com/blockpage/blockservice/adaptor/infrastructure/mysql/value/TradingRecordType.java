@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PaymentHistoryType {
+public enum TradingRecordType {
 
     GAIN(0, "충전"),
     LOSS(1, "소비"),
