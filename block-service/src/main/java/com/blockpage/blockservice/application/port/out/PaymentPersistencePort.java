@@ -11,6 +11,8 @@ public interface PaymentPersistencePort {
 
     PaymentEntityDto savePaymentRecord(PaymentDto paymentDto);
 
+    PaymentEntityDto getPayment(String orderId);
+
     @Builder
     @Getter
     class PaymentEntityDto {
