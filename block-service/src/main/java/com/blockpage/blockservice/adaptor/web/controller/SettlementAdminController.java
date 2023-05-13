@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/operations/trading-record")
-public class TradingRecordAdminController {
+public class SettlementAdminController {
 
     /**
-     * Mock Data 작업중 (서비스 로직 없음)
-     * 관리자 정산을 위한 페이지
+     * Mock Data 작업중 (서비스 로직 없음) 관리자 정산을 위한 페이지
      */
     @GetMapping
     public ResponseEntity<ApiResponse> getOrderHistory() {

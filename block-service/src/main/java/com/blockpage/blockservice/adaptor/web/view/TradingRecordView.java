@@ -2,7 +2,6 @@ package com.blockpage.blockservice.adaptor.web.view;
 
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
-import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.TradingRecordType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AllArgsConstructor;
@@ -13,20 +12,24 @@ import lombok.Getter;
 @JsonInclude(Include.NON_NULL)
 public class TradingRecordView {
 
+    /**
+     * 점검이 "매우" 필요함
+     */
+
     //common
     private Long memberId;
     private Integer blockQuantity;
     private productDescription productDescription;
 
     //member
-    private TradingRecordType tradingRecordType;
+    private String tradingRecordType;
     private BlockGainType blockGainType;
 
     //creator
     private Long won;
 
     //member-loss
-    public TradingRecordView(Long memberId, TradingRecordType tradingRecordType, Integer blockQuantity, BlockLossType blockLossType, Long productId) {
+    public TradingRecordView(Long memberId, String tradingRecordType, Integer blockQuantity, BlockLossType blockLossType, Long productId) {
         this.memberId = memberId;
         this.tradingRecordType = tradingRecordType;
         this.blockQuantity = blockQuantity;
@@ -35,7 +38,7 @@ public class TradingRecordView {
     }
 
     //member-obtain
-    public TradingRecordView(Long memberId, TradingRecordType tradingRecordType, Integer blockQuantity, BlockGainType blockGainType) {
+    public TradingRecordView(Long memberId, String tradingRecordType, Integer blockQuantity, BlockGainType blockGainType) {
         this.memberId = memberId;
         this.tradingRecordType = tradingRecordType;
         this.blockQuantity = blockQuantity;
