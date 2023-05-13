@@ -27,6 +27,7 @@ public interface BlockUseCase {
 
         private Long memberId;
         private String type;
+        public String orderId;
         private Integer blockQuantity;
     }
 
@@ -62,11 +63,13 @@ public interface BlockUseCase {
         private Long memberId;
         private String pgToken;
     }
+
     @Getter
     @AllArgsConstructor
     class refundBlockQuery {
 
         private Long memberId;
         private String orderId;
+        private String paymentCompany;
     }
 }
