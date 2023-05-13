@@ -1,8 +1,8 @@
-package com.blockpage.blockservice.adaptor.infrastructure.persistence;
+package com.blockpage.blockservice.adaptor.infrastructure.mysql.persistence;
 
-import com.blockpage.blockservice.adaptor.infrastructure.entity.BlockEntity;
-import com.blockpage.blockservice.adaptor.infrastructure.repository.BlockRepository;
-import com.blockpage.blockservice.application.port.out.BlockPort;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.repository.BlockRepository;
+import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
 import com.blockpage.blockservice.domain.Block;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class BlockAdaptor implements BlockPort {
+public class BlockPersistenceAdaptor implements BlockPersistencePort {
 
     private final BlockRepository blockRepository;
 

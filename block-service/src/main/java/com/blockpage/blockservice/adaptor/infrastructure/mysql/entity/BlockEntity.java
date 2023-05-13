@@ -1,6 +1,6 @@
-package com.blockpage.blockservice.adaptor.infrastructure.entity;
+package com.blockpage.blockservice.adaptor.infrastructure.mysql.entity;
 
-import com.blockpage.blockservice.adaptor.infrastructure.value.BlockGainType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "block")
-public class BlockEntity {
+public class BlockEntity extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

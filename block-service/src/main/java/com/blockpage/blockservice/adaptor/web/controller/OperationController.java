@@ -1,7 +1,7 @@
 package com.blockpage.blockservice.adaptor.web.controller;
 
 
-import com.blockpage.blockservice.adaptor.infrastructure.value.BlockLossType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
 import com.blockpage.blockservice.adaptor.web.view.ApiResponse;
 import com.blockpage.blockservice.adaptor.web.view.AdminPaymentHistoryView;
 import com.blockpage.blockservice.adaptor.web.view.PaymentHistoryView;
