@@ -1,7 +1,7 @@
 package com.blockpage.blockservice.adaptor.infrastructure.redis;
 
 import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
-import com.blockpage.blockservice.application.service.BlockService.PaymentOutDto;
+import com.blockpage.blockservice.application.service.BlockService.PaymentReceiptDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,12 +12,12 @@ public class RedisPersistenceAdaptor implements PaymentCachingPort {
     private final RedisRepository redisRepository;
 
     @Override
-    public void savePaymentReceipt(PaymentOutDto paymentOutDto) {
-        redisRepository.saveHashReceipt(paymentOutDto);
+    public void savePaymentReceipt(PaymentReceiptDto paymentReceiptDto) {
+        redisRepository.saveHashReceipt(paymentReceiptDto);
     }
 
     @Override
-    public PaymentOutDto getPaymentReceiptByMemberId(String memberId) {
+    public PaymentReceiptDto getPaymentReceiptByMemberId(String memberId) {
         return redisRepository.getHashReceiptByMemberId(memberId);
     }
 }
