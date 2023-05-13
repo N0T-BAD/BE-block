@@ -1,6 +1,7 @@
 package com.blockpage.blockservice.adaptor.external.kakao.response;
 
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
@@ -17,7 +18,7 @@ public class KakaoPayApprovalResponse {
     private String item_name;
     private String item_code;
     private int quantity;
-    private String created_at;
-    private String approved_at;
+    private LocalDateTime created_at;
+    private LocalDateTime approved_at;
     private String payload;
 }

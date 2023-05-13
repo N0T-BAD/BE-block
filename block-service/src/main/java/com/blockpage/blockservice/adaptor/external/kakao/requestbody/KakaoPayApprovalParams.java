@@ -1,7 +1,7 @@
 package com.blockpage.blockservice.adaptor.external.kakao.requestbody;
 
 import com.blockpage.blockservice.application.port.in.BlockUseCase.KakaoApproveQuery;
-import com.blockpage.blockservice.application.service.BlockService.PaymentOutDto;
+import com.blockpage.blockservice.application.service.BlockService.PaymentReceiptDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class KakaoPayApprovalParams {
     private String partner_order_id;
     private String partner_user_id;
 
-    public static KakaoPayApprovalParams addEssentialParams(KakaoApproveQuery query, PaymentOutDto receipt) {
+    public static KakaoPayApprovalParams addEssentialParams(KakaoApproveQuery query, PaymentReceiptDto receipt) {
 
         return KakaoPayApprovalParams.builder()
             .cid("TC0ONETIME")
