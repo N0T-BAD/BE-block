@@ -1,6 +1,6 @@
 package com.blockpage.blockservice.adaptor.infrastructure.redis;
 
-import com.blockpage.blockservice.application.service.BlockService.PaymentOutDto;
+import com.blockpage.blockservice.application.service.BlockService.PaymentReceiptDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,19 +18,19 @@ public class RedisRepository {
     private final String QUANTITY = "quantity";
     private final String TOTAL_AMOUNT = "totalAmount";
 
-    public void saveHashReceipt(PaymentOutDto paymentOutDto) {
+    public void saveHashReceipt(PaymentReceiptDto paymentReceiptDto) {
         HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
-        hashOperations.put(paymentOutDto.getMemberId(), TID, paymentOutDto.getTid());
-        hashOperations.put(paymentOutDto.getMemberId(), ORDER_ID, paymentOutDto.getOrderId());
-        hashOperations.put(paymentOutDto.getMemberId(), ITEM_NAME, paymentOutDto.getItemName());
-        hashOperations.put(paymentOutDto.getMemberId(), QUANTITY, paymentOutDto.getQuantity());
-        hashOperations.put(paymentOutDto.getMemberId(), TOTAL_AMOUNT, paymentOutDto.getTotalAmount());
+        hashOperations.put(paymentReceiptDto.getMemberId(), TID, paymentReceiptDto.getTid());
+        hashOperations.put(paymentReceiptDto.getMemberId(), ORDER_ID, paymentReceiptDto.getOrderId());
+        hashOperations.put(paymentReceiptDto.getMemberId(), ITEM_NAME, paymentReceiptDto.getItemName());
+        hashOperations.put(paymentReceiptDto.getMemberId(), QUANTITY, paymentReceiptDto.getQuantity());
+        hashOperations.put(paymentReceiptDto.getMemberId(), TOTAL_AMOUNT, paymentReceiptDto.getTotalAmount());
     }
 
-    public PaymentOutDto getHashReceiptByMemberId(String memberId) {
+    public PaymentReceiptDto getHashReceiptByMemberId(String memberId) {
         HashOperations<String, String, String> hashOperations = redisTemplate.opsForHash();
 
-        return new PaymentOutDto(
+        return new PaymentReceiptDto(
             memberId,
             hashOperations.get(memberId, TID),
             hashOperations.get(memberId, ORDER_ID),

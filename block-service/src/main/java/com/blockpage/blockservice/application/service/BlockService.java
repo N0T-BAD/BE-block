@@ -8,10 +8,12 @@ import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntit
 import com.blockpage.blockservice.application.port.in.BlockUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort.BlockEntityDto;
+import com.blockpage.blockservice.application.port.out.PaymentPersistencePort;
 import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
 import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
 import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -25,6 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 블럭 도메인 이벤트(C,U,D) 서비스
+ * 1. 블럭 조회
+ * 2. 블럭 생성 (현금충전, 출석, 게임)
+ * 3. 블럭 수정 (소비)
+ * 4. 블럭 생성 (현금충전 전 결제(준비,승인))
  */
 @Service
 @RequiredArgsConstructor
@@ -32,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BlockService implements BlockUseCase {
 
     private final BlockPersistencePort blockPersistencePort;
+    private final PaymentPersistencePort paymentPersistencePort;
     private final PaymentRequestPort paymentRequestPort;
     private final PaymentCachingPort paymentCachingPort;
 
@@ -41,7 +48,6 @@ public class BlockService implements BlockUseCase {
         List<Block> blocks = blockEntityDtoList.stream()
             .map(Block::initBlockFromEntityDto)
             .collect(Collectors.toList());
-
         Integer totalBlocks = Block.getTotalBlock(blocks);
         return new BlockQueryDto(query.getMemberId(), totalBlocks);
     }
@@ -55,14 +61,48 @@ public class BlockService implements BlockUseCase {
 
     @Override
     @Transactional
-    public void updateBlock(UpdateBlockQuery query) {
+    public void consumeBlock(UpdateBlockQuery query) {
         List<BlockEntity> blockEntityList = blockPersistencePort.updateBlockQuantity(query.getMemberId());
         List<Block> blocks = blockEntityList.stream()
             .map(Block::initBlockFromEntity)
             .collect(Collectors.toList());
-
         List<Block> consumeBlocks = Block.comsumeBlockList(blocks, query.getBlockQuantity());
+        consumeBlockQuantity(blockEntityList, consumeBlocks);
+    }
 
+    @Override
+    @Transactional
+    public KakaoPayReadyDto kakaoPayReady(KakaoReadyQuery query) {
+        String orderNumber = createOrderNumber(query.getMemberId());
+        KakaoPayReadyParams kakaoPayReadyParams = KakaoPayReadyParams.addEssentialParams(query, orderNumber);
+        KakaoPayReadyDto response = paymentRequestPort.ready(kakaoPayReadyParams);
+        paymentCachingPort.savePaymentReceipt(new PaymentReceiptDto(query, response, orderNumber));
+        return response;
+    }
+
+    @Override
+    @Transactional
+    public KakaoPayApproveDto kakaoPayApprove(KakaoApproveQuery query) {
+        PaymentReceiptDto receipt = paymentCachingPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
+        KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
+        KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
+        paymentPersistencePort.savePaymentRecord(new PaymentDto(receipt, response, "KAKAO"));
+        return response;
+    }
+
+    //==서비스 Layer 편의 메서드==//
+    public String createOrderNumber(Long memberId) {
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        String yyyyMmDd = LocalDate.now().toString().replace("-", "");
+        String randomNumbers = Stream.generate(() -> random.nextInt(1, 10))
+            .limit(6)
+            .map(String::valueOf)
+            .collect(Collectors.joining());
+        return yyyyMmDd + memberId.toString() + randomNumbers;
+    }
+
+    private static void consumeBlockQuantity(List<BlockEntity> blockEntityList, List<Block> consumeBlocks) {
         consumeBlocks.stream().forEach(
             i -> blockEntityList.stream()
                 .filter(e -> e.getId() == i.getBlockId())
@@ -72,25 +112,7 @@ public class BlockService implements BlockUseCase {
         );
     }
 
-    @Override
-    public KakaoPayReadyDto kakaoPayReady(KakaoReadyQuery query) {
-        String orderNumber = createOrderNumber(query.getMemberId());
-        KakaoPayReadyParams kakaoPayReadyParams = KakaoPayReadyParams.addEssentialParams(query, orderNumber);
-        KakaoPayReadyDto response = paymentRequestPort.ready(kakaoPayReadyParams);
-        System.out.println("orderNumber = " + orderNumber);
-        paymentCachingPort.savePaymentReceipt(new PaymentOutDto(query, response, orderNumber));
-        return response;
-    }
-
-    @Override
-    public KakaoPayApproveDto kakaoPayApprove(KakaoApproveQuery query) {
-        PaymentOutDto receipt = paymentCachingPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
-        System.out.println("receipt = " + receipt);
-        KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
-        KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
-        return response;
-    }
-
+    //==서비스 Layer DTO==//
     @Getter
     @AllArgsConstructor
     public class BlockQueryDto {
@@ -127,8 +149,8 @@ public class BlockService implements BlockUseCase {
         private Integer amount;
         private String item_name;
         private int quantity;
-        private String created_at;
-        private String approved_at;
+        private LocalDateTime created_at;
+        private LocalDateTime approved_at;
 
         public KakaoPayApproveDto(KakaoPayApprovalResponse response) {
             this.tid = response.getTid();
@@ -147,7 +169,7 @@ public class BlockService implements BlockUseCase {
     @Getter
     @ToString
     @AllArgsConstructor
-    public static class PaymentOutDto {
+    public static class PaymentReceiptDto {
 
         private String memberId;
         private String tid;
@@ -157,7 +179,7 @@ public class BlockService implements BlockUseCase {
         private String quantity;
         private String totalAmount;
 
-        public PaymentOutDto(KakaoReadyQuery query, KakaoPayReadyDto dto, String orderNumber) {
+        public PaymentReceiptDto(KakaoReadyQuery query, KakaoPayReadyDto dto, String orderNumber) {
             this.orderId = orderNumber;
             this.tid = dto.getTid();
             this.memberId = query.getMemberId().toString();
@@ -167,15 +189,32 @@ public class BlockService implements BlockUseCase {
         }
     }
 
-    public String createOrderNumber(Long memberId) {
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
+    @Getter
+    @AllArgsConstructor
+    public class PaymentDto {
 
-        String yyyyMmDd = LocalDate.now().toString().replace("-", "");
-        String randomNumbers = Stream.generate(() -> random.nextInt(1, 10))
-            .limit(6)
-            .map(String::valueOf)
-            .collect(Collectors.joining());
-        return yyyyMmDd + memberId.toString() + randomNumbers;
+        private String memberId;
+        private String tid;
+        private String orderId;
+
+        private String itemName;
+        private String quantity;
+        private String totalAmount;
+        private String paymentCompany;
+
+        private String paymentType;
+        private LocalDateTime paymentTime;
+
+        public PaymentDto(PaymentReceiptDto receipt, KakaoPayApproveDto approveDto, String paymentCompany) {
+            this.tid = receipt.getTid();
+            this.memberId = receipt.getMemberId();
+            this.orderId = receipt.getOrderId();
+            this.itemName = receipt.getItemName();
+            this.quantity = receipt.getQuantity();
+            this.totalAmount = receipt.getTotalAmount();
+            this.paymentTime = approveDto.getApproved_at();
+            this.paymentType = approveDto.getPayment_method_type();
+            this.paymentCompany = paymentCompany;
+        }
     }
 }

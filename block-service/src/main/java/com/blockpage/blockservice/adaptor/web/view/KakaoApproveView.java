@@ -2,6 +2,7 @@ package com.blockpage.blockservice.adaptor.web.view;
 
 import com.blockpage.blockservice.application.service.BlockService.KakaoPayApproveDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -19,8 +20,8 @@ public class KakaoApproveView {
     private String itemName;
     private int quantity;
 
-    private String createdAt;
-    private String approvedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime approvedAt;
 
     public KakaoApproveView(KakaoPayApproveDto dto) {
         this.userId = dto.getPartner_user_id();

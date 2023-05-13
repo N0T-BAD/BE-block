@@ -5,10 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PaymentHistoryType {
-
-    GAIN(0, "충전"),
-    LOSS(1, "소비"),
+public enum PaymentType {
+    MONEY(0, "현금"),
+    CARD(1, "카드"),
     ;
     private int key;
     private String value;

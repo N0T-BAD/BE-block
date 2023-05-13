@@ -81,7 +81,7 @@ public class BlockController {
     @PatchMapping
     public ResponseEntity<ApiResponse<String>> patchBlocks(@RequestBody BlockRequest blockRequest) {
 
-        blockUseCase.updateBlock(new UpdateBlockQuery(MEMBER_TEST_ID, blockRequest.getQuantity()));
+        blockUseCase.consumeBlock(new UpdateBlockQuery(MEMBER_TEST_ID, blockRequest.getQuantity()));
         return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse("성공"));
     }

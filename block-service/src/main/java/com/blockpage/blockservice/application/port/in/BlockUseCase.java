@@ -12,7 +12,7 @@ public interface BlockUseCase {
 
     void createBlock(ChargeBlockQuery query);
 
-    void updateBlock(UpdateBlockQuery query);
+    void consumeBlock(UpdateBlockQuery query);
 
     KakaoPayReadyDto kakaoPayReady(KakaoReadyQuery kakaoReadyQuery);
 
