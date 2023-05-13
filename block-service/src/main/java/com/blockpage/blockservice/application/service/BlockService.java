@@ -85,7 +85,7 @@ public class BlockService implements BlockUseCase {
         PaymentReceiptDto receipt = paymentCachingPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
         KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
         KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
-        paymentPersistencePort.savePaymentRecord(new PaymentDto(receipt, response, "kakao"));
+        paymentPersistencePort.savePaymentRecord(new PaymentDto(receipt, response, "kakaopay"));
         return response;
     }
 
@@ -95,7 +95,7 @@ public class BlockService implements BlockUseCase {
         PaymentEntityDto paymentEntityDto = paymentPersistencePort.getPayment(query.getOrderId());
         BlockEntityDto orderedBlock = blockPersistencePort.getOrderedBlock(query.getOrderId());
         if (orderedBlock.getBlockQuantity().equals(paymentEntityDto.getBlockQuantity())) {
-            if (query.getPaymentCompany().equals("kakao")) {
+            if (query.getCorp().equals("kakaopay")) {
                 KakaoPayRefundParams kakaoPayRefundParams = KakaoPayRefundParams.addEssentialParams(paymentEntityDto);
                 KakaoPayRefundDto kakaoPayRefundDto = paymentRequestPort.cancel(kakaoPayRefundParams);
                 blockPersistencePort.deleteBlockByOrderId(kakaoPayRefundDto.getOrderId());

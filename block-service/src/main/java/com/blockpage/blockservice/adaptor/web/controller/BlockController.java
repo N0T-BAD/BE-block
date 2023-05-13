@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,10 +54,11 @@ public class BlockController {
         @RequestParam String type,
         @RequestParam(required = false) String corp,
         @RequestParam(required = false) String step,
+        @RequestParam(required = false) String orderId,
         @RequestBody BlockRequest request
     ) {
         if (corp == null) {
-            blockUseCase.createBlock(new ChargeBlockQuery(MEMBER_TEST_ID, type, request.getOrderId(), request.getQuantity()));
+            blockUseCase.createBlock(new ChargeBlockQuery(MEMBER_TEST_ID, type, orderId, request.getQuantity()));
             return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse("성공"));
 
@@ -89,9 +89,9 @@ public class BlockController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<String>> deleteBlocks(@RequestParam String paymentCompany, @RequestParam String orderId) {
+    public ResponseEntity<ApiResponse<String>> deleteBlocks(@RequestParam String corp, @RequestParam String orderId) {
 
-        blockUseCase.refundBlock(new refundBlockQuery(MEMBER_TEST_ID, orderId, paymentCompany));
+        blockUseCase.refundBlock(new refundBlockQuery(MEMBER_TEST_ID, orderId, corp));
         return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse("성공"));
     }

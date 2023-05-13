@@ -70,6 +70,6 @@ public interface BlockUseCase {
 
         private Long memberId;
         private String orderId;
-        private String paymentCompany;
+        private String corp;
     }
 }
