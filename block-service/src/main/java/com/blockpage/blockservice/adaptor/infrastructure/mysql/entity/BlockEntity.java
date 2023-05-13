@@ -22,13 +22,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "block")
-public class BlockEntity extends BaseTimeEntity{
+public class BlockEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private Long memberId;
+    @Column
+    private String orderId;
     @Column
     private Integer blockQuantity;
     @Column
@@ -45,6 +47,7 @@ public class BlockEntity extends BaseTimeEntity{
 
     public static BlockEntity toEntity(Block block) {
         return BlockEntity.builder()
+            .orderId(block.getOrderId())
             .memberId(block.getMemberId())
             .blockQuantity(block.getBlockQuantity())
             .blockGainType(BlockGainType.findByValue(block.getGainType().getValue()))

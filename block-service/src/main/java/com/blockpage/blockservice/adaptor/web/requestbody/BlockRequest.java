@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class BlockRequest {
 
     private Integer quantity;
+    private String orderId;
 
     //kakaoReadySpec
     private String itemName;
