@@ -25,6 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 블럭 도메인 이벤트(C,U,D) 서비스
+ * 1. 블럭 조회
+ * 2. 블럭 생성 (현금충전, 출석, 게임)
+ * 3. 블럭 수정 (소비)
+ * 4. 블럭 생성 (현금충전 전 결제(준비,승인))
  */
 @Service
 @RequiredArgsConstructor
@@ -45,6 +49,7 @@ public class BlockService implements BlockUseCase {
         Integer totalBlocks = Block.getTotalBlock(blocks);
         return new BlockQueryDto(query.getMemberId(), totalBlocks);
     }
+
 
     @Override
     @Transactional
@@ -90,6 +95,8 @@ public class BlockService implements BlockUseCase {
         KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
         return response;
     }
+
+    //==서비스 Layer DTO==//
 
     @Getter
     @AllArgsConstructor
@@ -167,10 +174,10 @@ public class BlockService implements BlockUseCase {
         }
     }
 
+    //==서비스 Layer 편의 메서드==//
     public String createOrderNumber(Long memberId) {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
-
         String yyyyMmDd = LocalDate.now().toString().replace("-", "");
         String randomNumbers = Stream.generate(() -> random.nextInt(1, 10))
             .limit(6)
