@@ -47,7 +47,7 @@ public class BlockEntity extends BaseTimeEntity{
         return BlockEntity.builder()
             .memberId(block.getMemberId())
             .blockQuantity(block.getBlockQuantity())
-            .blockGainType(BlockGainType.findByValue(block.getBlockGainType().getValue()))
+            .blockGainType(BlockGainType.findByValue(block.getGainType().getValue()))
             .blockValidate(block.getBlockValidate())
             .expiredDate(block.getExpiredDate())
             .build();

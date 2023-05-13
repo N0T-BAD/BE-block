@@ -1,6 +1,7 @@
 package com.blockpage.blockservice.domain;
 
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.application.port.in.BlockUseCase.ChargeBlockQuery;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort.BlockEntityDto;
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class Block {
     private Long blockId;
     private Long memberId;
     private Integer blockQuantity;
-    private GainType blockGainType;
+    private GainType gainType;
     private Boolean blockValidate;
     private LocalDateTime expiredDate;
 
@@ -31,7 +32,8 @@ public class Block {
         }
         List<Block> sortedBlocks = blocks.stream()
             .filter(Block::isValid)
-            .sorted(Comparator.comparing(b -> b.getBlockGainType().getKey()))
+            .sorted(Comparator.comparing(Block::getExpiredDate))
+            .sorted(Comparator.comparing(Block::getGainType, Comparator.comparingInt(GainType::getKey)))
             .collect(Collectors.toList());
 
         List<Block> consumeBlock = new ArrayList<>();
@@ -64,12 +66,11 @@ public class Block {
         return this.expiredDate.isAfter(LocalDateTime.now()) && this.blockValidate;
     }
 
-
     public static Block initBlockForCharge(ChargeBlockQuery query) {
         return Block.builder()
             .blockId(null)
             .memberId(query.getMemberId())
-            .blockGainType(GainType.findByValue(query.getType()))
+            .gainType(GainType.findByValue(query.getType()))
             .blockQuantity(query.getBlockQuantity())
             .blockValidate(Boolean.TRUE)
             .expiredDate(LocalDateTime.now().plusYears(EXPIRED_BLOCK_YEAR))
@@ -80,7 +81,7 @@ public class Block {
         return Block.builder()
             .blockId(dto.getId())
             .memberId(dto.getMemberId())
-            .blockGainType(GainType.findByValue(dto.getBlockGainType().getValue()))
+            .gainType(GainType.findByValue(dto.getBlockGainType().getValue()))
             .blockQuantity(dto.getBlockQuantity())
             .blockValidate(dto.getBlockValidate())
             .expiredDate(dto.getExpiredDate())
@@ -91,7 +92,7 @@ public class Block {
         return Block.builder()
             .blockId(blockEntity.getId())
             .memberId(blockEntity.getMemberId())
-            .blockGainType(GainType.findByValue(blockEntity.getBlockGainType().getValue()))
+            .gainType(GainType.findByValue(blockEntity.getBlockGainType().getValue()))
             .blockQuantity(blockEntity.getBlockQuantity())
             .blockValidate(blockEntity.getBlockValidate())
             .expiredDate(blockEntity.getExpiredDate())
@@ -126,5 +127,4 @@ public class Block {
                 .get();
         }
     }
-
 }
