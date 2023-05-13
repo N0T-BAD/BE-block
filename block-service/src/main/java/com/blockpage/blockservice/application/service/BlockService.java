@@ -90,6 +90,12 @@ public class BlockService implements BlockUseCase {
         return response;
     }
 
+    @Override
+    @Transactional
+    public void refundBlock(refundBlockQuery refundBlockQuery) {
+
+    }
+
     //==서비스 Layer 편의 메서드==//
     public String createOrderNumber(Long memberId) {
         Random random = new Random();
