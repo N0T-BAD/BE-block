@@ -2,13 +2,16 @@ package com.blockpage.blockservice.application.service;
 
 import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayApprovalParams;
 import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayReadyParams;
+import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayRefundParams;
 import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayApprovalResponse;
 import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayReadyResponse;
+import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayRefundResponse;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import com.blockpage.blockservice.application.port.in.BlockUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort.BlockEntityDto;
 import com.blockpage.blockservice.application.port.out.PaymentPersistencePort;
+import com.blockpage.blockservice.application.port.out.PaymentPersistencePort.PaymentEntityDto;
 import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
 import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
 import com.blockpage.blockservice.domain.Block;
@@ -26,11 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 블럭 도메인 이벤트(C,U,D) 서비스
- * 1. 블럭 조회
- * 2. 블럭 생성 (현금충전, 출석, 게임)
- * 3. 블럭 수정 (소비)
- * 4. 블럭 생성 (현금충전 전 결제(준비,승인))
+ * 블럭 도메인 이벤트(C,U,D)
  */
 @Service
 @RequiredArgsConstructor
@@ -86,8 +85,26 @@ public class BlockService implements BlockUseCase {
         PaymentReceiptDto receipt = paymentCachingPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
         KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
         KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
-        paymentPersistencePort.savePaymentRecord(new PaymentDto(receipt, response, "KAKAO"));
+        paymentPersistencePort.savePaymentRecord(new PaymentDto(receipt, response, "kakaopay"));
         return response;
+    }
+
+    @Override
+    @Transactional
+    public void refundBlock(refundBlockQuery query) {
+        PaymentEntityDto paymentEntityDto = paymentPersistencePort.getPayment(query.getOrderId());
+        BlockEntityDto orderedBlock = blockPersistencePort.getOrderedBlock(query.getOrderId());
+        if (orderedBlock.getBlockQuantity().equals(paymentEntityDto.getBlockQuantity())) {
+            if (query.getCorp().equals("kakaopay")) {
+                KakaoPayRefundParams kakaoPayRefundParams = KakaoPayRefundParams.addEssentialParams(paymentEntityDto);
+                KakaoPayRefundDto kakaoPayRefundDto = paymentRequestPort.cancel(kakaoPayRefundParams);
+                blockPersistencePort.deleteBlockByOrderId(kakaoPayRefundDto.getOrderId());
+            } else {
+                throw new RuntimeException("잘못된 요청");
+            }
+        } else {
+            throw new RuntimeException("환불 불가");
+        }
     }
 
     //==서비스 Layer 편의 메서드==//
@@ -215,6 +232,39 @@ public class BlockService implements BlockUseCase {
             this.paymentTime = approveDto.getApproved_at();
             this.paymentType = approveDto.getPayment_method_type();
             this.paymentCompany = paymentCompany;
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class KakaoPayRefundDto {
+
+        private String tid;
+        private String status;
+        private String orderId;
+        private String memberId;
+        private Integer amount;
+        private Integer approvedCancelAmount;
+        private Integer canceledAmount;
+        private String itemName;
+        private Integer quantity;
+        private LocalDateTime createdAt;
+        private LocalDateTime approvedAt;
+        private LocalDateTime canceledAt;
+
+        public KakaoPayRefundDto(KakaoPayRefundResponse response) {
+            this.tid = response.getTid();
+            this.status = response.getStatus();
+            this.orderId = response.getPartner_order_id();
+            this.memberId = response.getPartner_user_id();
+            this.amount = response.getAmount().getTotal();
+            this.approvedCancelAmount = response.getApproved_cancel_amount().getTotal();
+            this.canceledAmount = response.getCanceled_amount().getTotal();
+            this.itemName = response.getItem_name();
+            this.quantity = response.getQuantity();
+            this.createdAt = response.getCreated_at();
+            this.approvedAt = response.getApproved_at();
+            this.canceledAt = response.getCanceled_at();
         }
     }
 }

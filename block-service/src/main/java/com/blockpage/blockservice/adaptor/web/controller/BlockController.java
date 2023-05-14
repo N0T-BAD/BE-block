@@ -19,6 +19,7 @@ import com.blockpage.blockservice.application.service.BlockService.KakaoPayReady
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,10 +54,11 @@ public class BlockController {
         @RequestParam String type,
         @RequestParam(required = false) String corp,
         @RequestParam(required = false) String step,
+        @RequestParam(required = false) String orderId,
         @RequestBody BlockRequest request
     ) {
         if (corp == null) {
-            blockUseCase.createBlock(new ChargeBlockQuery(MEMBER_TEST_ID, type, request.getQuantity()));
+            blockUseCase.createBlock(new ChargeBlockQuery(MEMBER_TEST_ID, type, orderId, request.getQuantity()));
             return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse("성공"));
 
@@ -82,6 +84,14 @@ public class BlockController {
     public ResponseEntity<ApiResponse<String>> patchBlocks(@RequestBody BlockRequest blockRequest) {
 
         blockUseCase.consumeBlock(new UpdateBlockQuery(MEMBER_TEST_ID, blockRequest.getQuantity()));
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(new ApiResponse("성공"));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<String>> deleteBlocks(@RequestParam String corp, @RequestParam String orderId) {
+
+        blockUseCase.refundBlock(new refundBlockQuery(MEMBER_TEST_ID, orderId, corp));
         return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse("성공"));
     }

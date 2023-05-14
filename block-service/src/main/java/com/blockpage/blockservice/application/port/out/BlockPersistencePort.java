@@ -13,6 +13,8 @@ public interface BlockPersistencePort {
     List<BlockEntityDto> getMemberBlock(Long memberId);
     BlockEntityDto saveBlock(Block block);
     List<BlockEntity> updateBlockQuantity(Long memberId);
+    BlockEntityDto getOrderedBlock(String orderId);
+    void deleteBlockByOrderId(String orderId);
 
     @Builder
     @Getter
@@ -20,19 +22,23 @@ public interface BlockPersistencePort {
 
         private Long id;
         private Long memberId;
+        private String orderId;
         private Integer blockQuantity;
         private Boolean blockValidate;
         private LocalDateTime expiredDate;
         private BlockGainType blockGainType;
+        private LocalDateTime updateTime;
 
         public static BlockEntityDto toDto(BlockEntity blockEntity) {
             return BlockEntityDto.builder()
                 .id(blockEntity.getId())
                 .memberId(blockEntity.getMemberId())
+                .orderId(blockEntity.getOrderId())
                 .blockQuantity(blockEntity.getBlockQuantity())
                 .blockGainType(blockEntity.getBlockGainType())
                 .blockValidate(blockEntity.getBlockValidate())
                 .expiredDate(blockEntity.getExpiredDate())
+                .updateTime(blockEntity.getUpdateTime())
                 .build();
         }
     }

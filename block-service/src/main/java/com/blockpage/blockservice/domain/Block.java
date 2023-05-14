@@ -21,6 +21,7 @@ public class Block {
 
     private Long blockId;
     private Long memberId;
+    private String orderId;
     private Integer blockQuantity;
     private GainType gainType;
     private Boolean blockValidate;
@@ -69,6 +70,7 @@ public class Block {
     public static Block initBlockForCharge(ChargeBlockQuery query) {
         return Block.builder()
             .blockId(null)
+            .orderId(query.getType().equals(GainType.CASH.getValue()) ? query.getOrderId() : null)
             .memberId(query.getMemberId())
             .gainType(GainType.findByValue(query.getType()))
             .blockQuantity(query.getBlockQuantity())
@@ -81,6 +83,7 @@ public class Block {
         return Block.builder()
             .blockId(dto.getId())
             .memberId(dto.getMemberId())
+            .orderId(dto.getOrderId())
             .gainType(GainType.findByValue(dto.getBlockGainType().getValue()))
             .blockQuantity(dto.getBlockQuantity())
             .blockValidate(dto.getBlockValidate())
@@ -92,6 +95,7 @@ public class Block {
         return Block.builder()
             .blockId(blockEntity.getId())
             .memberId(blockEntity.getMemberId())
+            .orderId(blockEntity.getOrderId())
             .gainType(GainType.findByValue(blockEntity.getBlockGainType().getValue()))
             .blockQuantity(blockEntity.getBlockQuantity())
             .blockValidate(blockEntity.getBlockValidate())

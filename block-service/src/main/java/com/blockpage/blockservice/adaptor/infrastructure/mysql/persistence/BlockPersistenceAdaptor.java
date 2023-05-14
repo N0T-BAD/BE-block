@@ -5,6 +5,7 @@ import com.blockpage.blockservice.adaptor.infrastructure.mysql.repository.BlockR
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
 import com.blockpage.blockservice.domain.Block;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -32,5 +33,16 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     @Override
     public List<BlockEntity> updateBlockQuantity(Long memberId) {
         return blockRepository.findByMemberId(memberId);
+    }
+
+    @Override
+    public BlockEntityDto getOrderedBlock(String orderId) {
+        Optional<BlockEntity> blockEntity = blockRepository.findByOrderId(orderId);
+        return BlockEntityDto.toDto(blockEntity.get());
+    }
+
+    @Override
+    public void deleteBlockByOrderId(String orderId) {
+        blockRepository.deleteByOrderId(orderId);
     }
 }
