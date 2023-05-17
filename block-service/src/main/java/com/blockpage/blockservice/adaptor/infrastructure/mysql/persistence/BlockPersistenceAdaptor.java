@@ -17,28 +17,28 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     private final BlockRepository blockRepository;
 
     @Override
-    public List<BlockEntityDto> getMemberBlock(Long memberId) {
+    public Block saveBlock(Block block) {
+        BlockEntity blockEntity = blockRepository.save(BlockEntity.toEntity(block));
+        return Block.toDomainFromEntity(blockEntity);
+    }
+
+    @Override
+    public List<Block> getMemberBlock(Long memberId) {
         List<BlockEntity> blockEntities = blockRepository.findByMemberId(memberId);
         return blockEntities.stream()
-            .map(BlockEntityDto::toDto)
+            .map(Block::toDomainFromEntity)
             .collect(Collectors.toList());
     }
 
     @Override
-    public BlockEntityDto saveBlock(Block block) {
-        BlockEntity blockEntity = blockRepository.save(BlockEntity.toEntity(block));
-        return BlockEntityDto.toDto(blockEntity);
+    public Block getBlockByOrderId(String orderId) {
+        Optional<BlockEntity> blockEntity = blockRepository.findByOrderId(orderId);
+        return Block.toDomainFromEntity(blockEntity.get());
     }
 
     @Override
     public List<BlockEntity> updateBlockQuantity(Long memberId) {
         return blockRepository.findByMemberId(memberId);
-    }
-
-    @Override
-    public BlockEntityDto getOrderedBlock(String orderId) {
-        Optional<BlockEntity> blockEntity = blockRepository.findByOrderId(orderId);
-        return BlockEntityDto.toDto(blockEntity.get());
     }
 
     @Override

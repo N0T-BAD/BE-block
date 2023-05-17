@@ -9,15 +9,10 @@ import lombok.Getter;
 public interface BlockUseCase {
 
     BlockQueryDto findAllBlock(FindBlockQuery findBlockQuery);
-
     void createBlock(ChargeBlockQuery query);
-
     void consumeBlock(UpdateBlockQuery query);
-
     KakaoPayReadyDto kakaoPayReady(KakaoReadyQuery kakaoReadyQuery);
-
     KakaoPayApproveDto kakaoPayApprove(KakaoApproveQuery kakaoApproveQuery);
-
     void refundBlock(refundBlockQuery refundBlockQuery);
 
 

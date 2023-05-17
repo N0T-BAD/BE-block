@@ -9,7 +9,6 @@ import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayRefund
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import com.blockpage.blockservice.application.port.in.BlockUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
-import com.blockpage.blockservice.application.port.out.BlockPersistencePort.BlockEntityDto;
 import com.blockpage.blockservice.application.port.out.PaymentPersistencePort;
 import com.blockpage.blockservice.application.port.out.PaymentPersistencePort.PaymentEntityDto;
 import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
@@ -43,11 +42,8 @@ public class BlockService implements BlockUseCase {
 
     @Override
     public BlockQueryDto findAllBlock(FindBlockQuery query) {
-        List<BlockEntityDto> blockEntityDtoList = blockPersistencePort.getMemberBlock(query.getMemberId());
-        List<Block> blocks = blockEntityDtoList.stream()
-            .map(Block::initBlockFromEntityDto)
-            .collect(Collectors.toList());
-        Integer totalBlocks = Block.getTotalBlock(blocks);
+        List<Block> memberBlocks = blockPersistencePort.getMemberBlock(query.getMemberId());
+        Integer totalBlocks = Block.getTotalBlock(memberBlocks);
         return new BlockQueryDto(query.getMemberId(), totalBlocks);
     }
 
@@ -63,7 +59,7 @@ public class BlockService implements BlockUseCase {
     public void consumeBlock(UpdateBlockQuery query) {
         List<BlockEntity> blockEntityList = blockPersistencePort.updateBlockQuantity(query.getMemberId());
         List<Block> blocks = blockEntityList.stream()
-            .map(Block::initBlockFromEntity)
+            .map(Block::toDomainFromEntity)
             .collect(Collectors.toList());
         List<Block> consumeBlocks = Block.comsumeBlockList(blocks, query.getBlockQuantity());
         consumeBlockQuantity(blockEntityList, consumeBlocks);
@@ -93,7 +89,8 @@ public class BlockService implements BlockUseCase {
     @Transactional
     public void refundBlock(refundBlockQuery query) {
         PaymentEntityDto paymentEntityDto = paymentPersistencePort.getPayment(query.getOrderId());
-        BlockEntityDto orderedBlock = blockPersistencePort.getOrderedBlock(query.getOrderId());
+        Block orderedBlock = blockPersistencePort.getBlockByOrderId(query.getOrderId());
+
         if (orderedBlock.getBlockQuantity().equals(paymentEntityDto.getBlockQuantity())) {
             if (query.getCorp().equals("kakaopay")) {
                 KakaoPayRefundParams kakaoPayRefundParams = KakaoPayRefundParams.addEssentialParams(paymentEntityDto);

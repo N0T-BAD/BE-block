@@ -1,7 +1,6 @@
 package com.blockpage.blockservice.domain;
 
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
-import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.application.port.in.BlockUseCase.ChargeBlockQuery;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort.BlockEntityDto;
 import java.time.LocalDateTime;
@@ -91,7 +90,7 @@ public class Block {
             .build();
     }
 
-    public static Block initBlockFromEntity(BlockEntity blockEntity) {
+    public static Block toDomainFromEntity(BlockEntity blockEntity) {
         return Block.builder()
             .blockId(blockEntity.getId())
             .memberId(blockEntity.getMemberId())
