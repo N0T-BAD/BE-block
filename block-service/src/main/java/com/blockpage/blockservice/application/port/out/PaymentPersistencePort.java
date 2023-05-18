@@ -10,7 +10,7 @@ import lombok.Getter;
 public interface PaymentPersistencePort {
 
     PaymentEntityDto savePaymentRecord(PaymentService.PaymentEntityDto paymentEntityDto);
-    PaymentEntityDto getPayment(String orderId);
+    PaymentEntityDto getPaymentByOrderId(String orderId);
 
     @Builder
     @Getter

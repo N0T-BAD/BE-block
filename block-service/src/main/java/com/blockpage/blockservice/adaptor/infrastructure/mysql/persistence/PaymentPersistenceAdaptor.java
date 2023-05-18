@@ -21,7 +21,7 @@ public class PaymentPersistenceAdaptor implements PaymentPersistencePort {
     }
 
     @Override
-    public PaymentEntityDto getPayment(String orderId) {
+    public PaymentEntityDto getPaymentByOrderId(String orderId) {
         Optional<PaymentEntity> paymentEntity = paymentRepository.findByOrderId(orderId);
         return PaymentPersistencePort.PaymentEntityDto.toDto(paymentEntity.get());
     }
