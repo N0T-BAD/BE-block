@@ -1,11 +1,11 @@
 package com.blockpage.blockservice.application.service;
 
-import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayApprovalParams;
-import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayReadyParams;
-import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayRefundParams;
-import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayApprovalResponse;
-import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayReadyResponse;
-import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayRefundResponse;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayApprovalParams;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayReadyParams;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayRefundParams;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayApprovalResponse;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayReadyResponse;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayRefundResponse;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import com.blockpage.blockservice.application.port.in.BlockUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;

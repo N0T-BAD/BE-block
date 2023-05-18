@@ -1,4 +1,4 @@
-package com.blockpage.blockservice.adaptor.external.kakao.configuration;
+package com.blockpage.blockservice.adaptor.infrastructure.external.kakao.configuration;
 
 import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;

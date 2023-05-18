@@ -1,9 +1,6 @@
-package com.blockpage.blockservice.adaptor.external.kakao.requestbody;
+package com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody;
 
-import static com.blockpage.blockservice.adaptor.external.kakao.configuration.KakaoPayRedirectUrl.KAKAO_APPROVAL_URL;
-import static com.blockpage.blockservice.adaptor.external.kakao.configuration.KakaoPayRedirectUrl.KAKAO_CANCEL_URL;
-import static com.blockpage.blockservice.adaptor.external.kakao.configuration.KakaoPayRedirectUrl.KAKAO_FAIL_URL;
-
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.configuration.KakaoPayRedirectUrl;
 import com.blockpage.blockservice.application.port.in.BlockUseCase.KakaoReadyQuery;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +25,9 @@ public class KakaoPayReadyParams {
     public static KakaoPayReadyParams addEssentialParams(KakaoReadyQuery query, String orderNumber) {
         return KakaoPayReadyParams.builder()
             .cid("TC0ONETIME")
-            .approval_url(KAKAO_APPROVAL_URL.getUrl())
-            .cancel_url(KAKAO_CANCEL_URL.getUrl())
-            .fail_url(KAKAO_FAIL_URL.getUrl())
+            .approval_url(KakaoPayRedirectUrl.KAKAO_APPROVAL_URL.getUrl())
+            .cancel_url(KakaoPayRedirectUrl.KAKAO_CANCEL_URL.getUrl())
+            .fail_url(KakaoPayRedirectUrl.KAKAO_FAIL_URL.getUrl())
             .tax_free_amount(0)
             .partner_order_id(orderNumber)
             .item_name(query.getItemName())

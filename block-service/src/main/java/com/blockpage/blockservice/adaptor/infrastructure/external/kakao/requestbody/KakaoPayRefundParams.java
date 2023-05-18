@@ -1,4 +1,4 @@
-package com.blockpage.blockservice.adaptor.external.kakao.requestbody;
+package com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody;
 
 import com.blockpage.blockservice.application.port.out.PaymentPersistencePort.PaymentEntityDto;
 import lombok.AllArgsConstructor;

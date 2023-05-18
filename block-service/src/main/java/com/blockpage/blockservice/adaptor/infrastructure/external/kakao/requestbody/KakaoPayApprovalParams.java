@@ -1,4 +1,4 @@
-package com.blockpage.blockservice.adaptor.external.kakao.requestbody;
+package com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody;
 
 import com.blockpage.blockservice.application.port.in.BlockUseCase.KakaoApproveQuery;
 import com.blockpage.blockservice.application.service.BlockService.PaymentReceiptDto;

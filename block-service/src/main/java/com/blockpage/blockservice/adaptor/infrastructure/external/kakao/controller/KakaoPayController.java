@@ -1,11 +1,11 @@
-package com.blockpage.blockservice.adaptor.external.kakao.controller;
+package com.blockpage.blockservice.adaptor.infrastructure.external.kakao.controller;
 
-import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayApprovalParams;
-import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayReadyParams;
-import com.blockpage.blockservice.adaptor.external.kakao.requestbody.KakaoPayRefundParams;
-import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayApprovalResponse;
-import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayReadyResponse;
-import com.blockpage.blockservice.adaptor.external.kakao.response.KakaoPayRefundResponse;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayApprovalParams;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayReadyParams;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayRefundParams;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayApprovalResponse;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayReadyResponse;
+import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayRefundResponse;
 import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
 import com.blockpage.blockservice.application.service.BlockService.KakaoPayApproveDto;
 import com.blockpage.blockservice.application.service.BlockService.KakaoPayReadyDto;
