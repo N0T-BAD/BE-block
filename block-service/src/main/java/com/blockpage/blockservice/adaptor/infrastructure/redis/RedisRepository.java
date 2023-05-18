@@ -1,6 +1,6 @@
 package com.blockpage.blockservice.adaptor.infrastructure.redis;
 
-import com.blockpage.blockservice.application.service.BlockService.PaymentReceiptDto;
+import com.blockpage.blockservice.application.service.PaymentService.PaymentReceiptDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;

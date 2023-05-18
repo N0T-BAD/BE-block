@@ -1,7 +1,7 @@
 package com.blockpage.blockservice.adaptor.infrastructure.mysql.entity;
 
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.PaymentType;
-import com.blockpage.blockservice.application.service.BlockService.PaymentDto;
+import com.blockpage.blockservice.application.service.PaymentService.PaymentEntityDto;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,17 +47,17 @@ public class PaymentEntity {
     @Column
     private Integer totalAmount;
 
-    public static PaymentEntity toEntity(PaymentDto paymentDto) {
+    public static PaymentEntity toEntity(PaymentEntityDto paymentEntityDto) {
         return PaymentEntity.builder()
-            .memberId(Long.valueOf(paymentDto.getMemberId()))
-            .orderId(paymentDto.getOrderId())
-            .tid(paymentDto.getTid())
-            .itemName(paymentDto.getItemName())
-            .blockQuantity(Integer.valueOf(paymentDto.getQuantity()))
-            .totalAmount(Integer.valueOf(paymentDto.getTotalAmount()))
-            .paymentType(PaymentType.valueOf(paymentDto.getPaymentType()))
-            .paymentTime(paymentDto.getPaymentTime())
-            .paymentCompany(paymentDto.getPaymentCompany())
+            .memberId(Long.valueOf(paymentEntityDto.getMemberId()))
+            .orderId(paymentEntityDto.getOrderId())
+            .tid(paymentEntityDto.getTid())
+            .itemName(paymentEntityDto.getItemName())
+            .blockQuantity(Integer.valueOf(paymentEntityDto.getQuantity()))
+            .totalAmount(Integer.valueOf(paymentEntityDto.getTotalAmount()))
+            .paymentType(PaymentType.valueOf(paymentEntityDto.getPaymentType()))
+            .paymentTime(paymentEntityDto.getPaymentTime())
+            .paymentCompany(paymentEntityDto.getPaymentCompany())
             .build();
     }
 }
