@@ -6,10 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum BlockLossType {
-    WEBTOON(0, "webtoon"),
-    EPISODE_BM(1 ,"episode"),
-    PROFILE_SKIN(2, "profile-skin"),
-    NFT(3, "nft"),
+    EPISODE_BM(0 ,"episode"),
+    PROFILE_SKIN(1, "profile-skin"),
+    NFT(2, "nft"),
     ;
 
     private int key;
