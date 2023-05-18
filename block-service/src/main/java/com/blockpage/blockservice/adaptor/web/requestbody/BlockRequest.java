@@ -7,13 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BlockRequest {
 
-    private Integer quantity;
-
-    //kakaoReadySpec
-    private String itemName;
-    private Integer totalAmount;
-
-    //kakaoApproveSpec
-    private String pgToken;
-
+    private Integer blockQuantity;
+    private String orderId;
 }

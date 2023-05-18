@@ -1,13 +1,13 @@
-package com.blockpage.blockservice.adaptor.external.kakao.response;
+package com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response;
 
 import lombok.Getter;
 
 @Getter
-public class CanceledAmount {
+public class ApprovedCancelAmount {
 
     private Integer total;
     private Integer tax_free;
-    private Integer tax;
+    private Integer vat;
     private Integer point;
     private Integer discount;
     private Integer green_deposit;

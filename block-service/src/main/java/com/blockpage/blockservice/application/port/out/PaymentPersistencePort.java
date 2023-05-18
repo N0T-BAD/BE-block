@@ -2,15 +2,14 @@ package com.blockpage.blockservice.application.port.out;
 
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.PaymentEntity;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.PaymentType;
-import com.blockpage.blockservice.application.service.BlockService.PaymentDto;
+import com.blockpage.blockservice.application.service.PaymentService;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
 public interface PaymentPersistencePort {
 
-    PaymentEntityDto savePaymentRecord(PaymentDto paymentDto);
-
+    PaymentEntityDto savePaymentRecord(PaymentService.PaymentEntityDto paymentEntityDto);
     PaymentEntityDto getPayment(String orderId);
 
     @Builder
@@ -29,7 +28,7 @@ public interface PaymentPersistencePort {
         private Integer totalAmount;
 
         public static PaymentEntityDto toDto(PaymentEntity paymentEntity) {
-            return PaymentEntityDto.builder()
+            return PaymentPersistencePort.PaymentEntityDto.builder()
                 .id(paymentEntity.getId())
                 .memberId(paymentEntity.getMemberId())
                 .orderId(paymentEntity.getOrderId())

@@ -1,7 +1,7 @@
 package com.blockpage.blockservice.adaptor.infrastructure.redis;
 
 import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
-import com.blockpage.blockservice.application.service.BlockService.PaymentReceiptDto;
+import com.blockpage.blockservice.application.service.PaymentService.PaymentReceiptDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
