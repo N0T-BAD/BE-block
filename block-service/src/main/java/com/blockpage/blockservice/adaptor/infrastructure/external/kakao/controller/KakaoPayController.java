@@ -7,9 +7,9 @@ import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayReadyResponse;
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayRefundResponse;
 import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
-import com.blockpage.blockservice.application.service.BlockService.KakaoPayRefundDto;
 import com.blockpage.blockservice.application.service.PaymentService.KakaoPayApproveDto;
 import com.blockpage.blockservice.application.service.PaymentService.KakaoPayReadyDto;
+import com.blockpage.blockservice.application.service.PaymentService.KakaoPayRefundDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

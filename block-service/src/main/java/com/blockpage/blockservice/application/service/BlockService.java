@@ -68,37 +68,4 @@ public class BlockService implements BlockUseCase {
         private Long memberId;
         private Integer totalBlocks;
     }
-
-    @Getter
-    @AllArgsConstructor
-    public static class KakaoPayRefundDto {
-
-        private String tid;
-        private String status;
-        private String orderId;
-        private String memberId;
-        private Integer amount;
-        private Integer approvedCancelAmount;
-        private Integer canceledAmount;
-        private String itemName;
-        private Integer quantity;
-        private LocalDateTime createdAt;
-        private LocalDateTime approvedAt;
-        private LocalDateTime canceledAt;
-
-        public KakaoPayRefundDto(KakaoPayRefundResponse response) {
-            this.tid = response.getTid();
-            this.status = response.getStatus();
-            this.orderId = response.getPartner_order_id();
-            this.memberId = response.getPartner_user_id();
-            this.amount = response.getAmount().getTotal();
-            this.approvedCancelAmount = response.getApproved_cancel_amount().getTotal();
-            this.canceledAmount = response.getCanceled_amount().getTotal();
-            this.itemName = response.getItem_name();
-            this.quantity = response.getQuantity();
-            this.createdAt = response.getCreated_at();
-            this.approvedAt = response.getApproved_at();
-            this.canceledAt = response.getCanceled_at();
-        }
-    }
 }
