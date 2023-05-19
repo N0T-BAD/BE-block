@@ -9,6 +9,9 @@ import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.PaymentEntity;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.PaymentMethod;
+import com.blockpage.blockservice.application.port.in.BlockUseCase.ChargeBlockQuery;
+import com.blockpage.blockservice.application.port.in.BlockUseCase.UpdateBlockQuery;
 import com.blockpage.blockservice.application.port.in.PaymentUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
 import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
@@ -211,6 +214,7 @@ public class PaymentService implements PaymentUseCase {
                 .paymentTime(response.getApproved_at())
                 .paymentMethod(response.getPayment_method_type())
                 .blockGainType(BlockGainType.CASH)
+                .blockLossType(BlockLossType.NONE)
                 .paymentCompany("kakao")
                 .build();
         }
@@ -224,10 +228,42 @@ public class PaymentService implements PaymentUseCase {
                 .blockQuantity(entity.getBlockQuantity())
                 .totalAmount(entity.getTotalAmount())
                 .paymentTime(entity.getPaymentTime())
-                .paymentMethod(entity.getPaymentMethod().getValue())
+                .paymentMethod(entity.getPaymentMethod().toString())
                 .blockGainType(entity.getBlockGainType())
                 .blockLossType(entity.getBlockLossType())
                 .paymentCompany(entity.getPaymentCompany())
+                .build();
+        }
+
+        public static PaymentEntityDto initForGameAndAttendance(ChargeBlockQuery query) {
+            return PaymentEntityDto.builder()
+                .tid("none")
+                .memberId(query.getMemberId())
+                .orderId(createOrderNumber(query.getMemberId()))
+                .itemName(query.getType())
+                .blockQuantity(query.getBlockQuantity())
+                .totalAmount(0)
+                .paymentTime(LocalDateTime.now())
+                .paymentMethod(PaymentMethod.FREE.toString())
+                .blockGainType(BlockGainType.findByValue(query.getType()))
+                .blockLossType(BlockLossType.NONE)
+                .paymentCompany("blockPage")
+                .build();
+        }
+
+        public static PaymentEntityDto initForInternalService(UpdateBlockQuery query) {
+            return PaymentEntityDto.builder()
+                .tid("none")
+                .memberId(query.getMemberId())
+                .orderId(createOrderNumber(query.getMemberId()))
+                .itemName(query.getType())
+                .blockQuantity(query.getBlockQuantity())
+                .totalAmount(0)
+                .paymentTime(LocalDateTime.now())
+                .paymentMethod(PaymentMethod.BLOCK.toString())
+                .blockGainType(BlockGainType.NONE)
+                .blockLossType(BlockLossType.findByValue(query.getType()))
+                .paymentCompany("blockPage")
                 .build();
         }
     }
@@ -333,7 +369,7 @@ public class PaymentService implements PaymentUseCase {
         }
     }
 
-    public String createOrderNumber(Long memberId) {
+    public static String createOrderNumber(Long memberId) {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
         String yyyyMmDd = LocalDate.now().toString().replace("-", "");
