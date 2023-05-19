@@ -1,6 +1,8 @@
 package com.blockpage.blockservice.adaptor.infrastructure.mysql.entity;
 
-import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.PaymentType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.PaymentMethod;
 import com.blockpage.blockservice.application.service.PaymentService.PaymentEntityDto;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -41,7 +43,13 @@ public class PaymentEntity {
     private Integer blockQuantity;
     @Column
     @Enumerated(EnumType.STRING)
-    private PaymentType paymentType;
+    private PaymentMethod paymentMethod;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private BlockGainType blockGainType;
+    @Column
+    @Enumerated(EnumType.STRING)
+    private BlockLossType blockLossType;
     @Column
     private LocalDateTime paymentTime;
     @Column
@@ -53,10 +61,12 @@ public class PaymentEntity {
             .orderId(paymentEntityDto.getOrderId())
             .tid(paymentEntityDto.getTid())
             .itemName(paymentEntityDto.getItemName())
-            .blockQuantity(Integer.valueOf(paymentEntityDto.getQuantity()))
+            .blockQuantity(Integer.valueOf(paymentEntityDto.getBlockQuantity()))
             .totalAmount(Integer.valueOf(paymentEntityDto.getTotalAmount()))
-            .paymentType(PaymentType.valueOf(paymentEntityDto.getPaymentType()))
+            .paymentMethod(PaymentMethod.valueOf(paymentEntityDto.getPaymentMethod()))
             .paymentTime(paymentEntityDto.getPaymentTime())
+            .blockLossType(paymentEntityDto.getBlockLossType())
+            .blockGainType(paymentEntityDto.getBlockGainType())
             .paymentCompany(paymentEntityDto.getPaymentCompany())
             .build();
     }

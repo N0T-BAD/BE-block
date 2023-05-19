@@ -9,9 +9,7 @@ import lombok.Getter;
 public interface BlockUseCase {
 
     BlockQueryDto findAllBlock(FindBlockQuery findBlockQuery);
-
     void createBlock(ChargeBlockQuery query);
-
     void consumeBlock(UpdateBlockQuery query);
 
     @Getter
@@ -34,11 +32,20 @@ public interface BlockUseCase {
     }
 
     @Getter
-    @AllArgsConstructor
+    @Builder
     class UpdateBlockQuery {
 
         private Long memberId;
+        private String type;
         private Integer blockQuantity;
+
+        public static UpdateBlockQuery toQuery(Long memberId, BlockRequest request) {
+            return UpdateBlockQuery.builder()
+                .type(request.getType())
+                .blockQuantity(request.getBlockQuantity())
+                .memberId(memberId)
+                .build();
+        }
     }
 
     @Getter
@@ -46,23 +53,5 @@ public interface BlockUseCase {
     class FindBlockQuery {
 
         private Long memberId;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    class KakaoReadyQuery {
-
-        private Long memberId;
-        private String itemName;
-        private Integer quantity;
-        private Integer totalAmount;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    class KakaoApproveQuery {
-
-        private Long memberId;
-        private String pgToken;
     }
 }

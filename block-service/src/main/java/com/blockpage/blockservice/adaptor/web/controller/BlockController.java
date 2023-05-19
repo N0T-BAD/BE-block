@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/blocks")
 public class BlockController {
 
-    private final long MEMBER_TEST_ID = 1L;
+    private final Long MEMBER_TEST_ID = 1L;
 
     private final BlockUseCase blockUseCase;
 
@@ -37,20 +37,19 @@ public class BlockController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> postBlocks(
+    public ResponseEntity<ApiResponse<BlockView>> postBlocks(
         @RequestParam String type,
         @RequestBody BlockRequest request
     ) {
         blockUseCase.createBlock(ChargeBlockQuery.toQuery(MEMBER_TEST_ID, type, request));
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(new ApiResponse("성공"));
+            .body(new ApiResponse(new BlockView("블럭이 성공적으로 등록되었습니다.")));
     }
 
     @PutMapping
     public ResponseEntity<ApiResponse<String>> patchBlocks(@RequestBody BlockRequest blockRequest) {
-
-        blockUseCase.consumeBlock(new UpdateBlockQuery(MEMBER_TEST_ID, blockRequest.getBlockQuantity()));
+        blockUseCase.consumeBlock(UpdateBlockQuery.toQuery(MEMBER_TEST_ID, blockRequest));
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new ApiResponse("성공"));
+            .body(new ApiResponse("블럭이 성공적으로 차감되었습니다."));
     }
 }

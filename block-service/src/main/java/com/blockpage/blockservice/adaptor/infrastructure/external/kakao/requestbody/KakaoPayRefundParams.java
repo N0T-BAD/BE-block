@@ -1,6 +1,6 @@
 package com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody;
 
-import com.blockpage.blockservice.application.port.out.PaymentPersistencePort.PaymentEntityDto;
+import com.blockpage.blockservice.application.service.PaymentService.PaymentEntityDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

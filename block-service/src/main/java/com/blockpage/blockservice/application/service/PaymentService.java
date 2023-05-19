@@ -6,6 +6,12 @@ import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestb
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayApprovalResponse;
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayReadyResponse;
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayRefundResponse;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.PaymentEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.PaymentMethod;
+import com.blockpage.blockservice.application.port.in.BlockUseCase.ChargeBlockQuery;
+import com.blockpage.blockservice.application.port.in.BlockUseCase.UpdateBlockQuery;
 import com.blockpage.blockservice.application.port.in.PaymentUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
 import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
@@ -14,6 +20,8 @@ import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
 import com.blockpage.blockservice.domain.Block;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -50,11 +58,11 @@ public class PaymentService implements PaymentUseCase {
                 PaymentReceiptDto receipt = paymentCachingPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
                 KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
                 KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
-                paymentPersistencePort.savePaymentRecord(new PaymentEntityDto(receipt, response, "kakao"));
+                paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForKakao(receipt, response));
                 return PaymentResponseDto.initFromKakaoApproveDto(response);
             }
             case KAKAO_PAY_REFUND -> {
-                PaymentPersistencePort.PaymentEntityDto paymentEntityDto = paymentPersistencePort.getPayment(query.getOrderId());
+                PaymentEntityDto paymentEntityDto = paymentPersistencePort.getPaymentByOrderId(query.getOrderId());
                 Block orderedBlock = blockPersistencePort.getBlockByOrderId(query.getOrderId());
                 if (orderedBlock.getBlockQuantity().equals(paymentEntityDto.getBlockQuantity())) {
                     KakaoPayRefundParams kakaoPayRefundParams = KakaoPayRefundParams.addEssentialParams(paymentEntityDto);
@@ -70,15 +78,61 @@ public class PaymentService implements PaymentUseCase {
     }
 
     @Override
-    public PaymentHistoryDto paymentHistoryQuery(PaymentHistoryQuery query) {
+    public List<PaymentHistoryDto> paymentHistoryQuery(PaymentHistoryQuery query) {
+        List<PaymentEntityDto> paymentEntityDtos;
+        switch (PaymentType.findByValue(query.getType())) {
+            case GAIN -> paymentEntityDtos = paymentPersistencePort.getBlockGainType(query.getMemberId());
+            case LOSS -> paymentEntityDtos = paymentPersistencePort.getBlockLossType(query.getMemberId());
+            default -> throw new IllegalStateException("Unexpected value: " + query.getType());
+        }
+        return paymentEntityDtos.stream()
+            .map(PaymentHistoryDto::toHistoryDto)
+            .toList();
+    }
 
-        return null;
+    @Getter
+    @AllArgsConstructor
+    enum PaymentType {
+        GAIN(0, "gain"),
+        LOSS(0, "loss"),
+        ;
+        int key;
+        String value;
+
+        public static PaymentType findByValue(String value) {
+            return Arrays.stream(PaymentType.values())
+                .filter(t -> t.getValue().equals(value))
+                .findFirst()
+                .get();
+        }
     }
 
     @Getter
     @Builder
-    public class PaymentHistoryDto {
+    public static class PaymentHistoryDto {
 
+        private Long memberId;
+
+        private String itemName;
+        private Integer blockQuantity;
+        private Integer totalAmount;
+
+        private LocalDateTime paymentTime;
+
+        private BlockGainType blockGainType;
+        private BlockLossType blockLossType;
+
+        public static PaymentHistoryDto toHistoryDto(PaymentEntityDto paymentEntityDto) {
+            return PaymentHistoryDto.builder()
+                .memberId(paymentEntityDto.getMemberId())
+                .itemName(paymentEntityDto.getItemName())
+                .blockQuantity(paymentEntityDto.getBlockQuantity())
+                .totalAmount(paymentEntityDto.getTotalAmount())
+                .paymentTime(paymentEntityDto.getPaymentTime())
+                .blockGainType(paymentEntityDto.getBlockGainType())
+                .blockLossType(paymentEntityDto.getBlockLossType())
+                .build();
+        }
     }
 
     @Getter
@@ -131,31 +185,86 @@ public class PaymentService implements PaymentUseCase {
     }
 
     @Getter
-    @AllArgsConstructor
-    public class PaymentEntityDto {
+    @Builder
+    public static class PaymentEntityDto {
 
-        private String memberId;
+        private Long memberId;
         private String tid;
         private String orderId;
 
         private String itemName;
-        private String quantity;
-        private String totalAmount;
+        private Integer blockQuantity;
+        private Integer totalAmount;
         private String paymentCompany;
 
-        private String paymentType;
+        private String paymentMethod;
         private LocalDateTime paymentTime;
 
-        public PaymentEntityDto(PaymentReceiptDto receipt, KakaoPayApproveDto approveDto, String paymentCompany) {
-            this.tid = receipt.getTid();
-            this.memberId = receipt.getMemberId();
-            this.orderId = receipt.getOrderId();
-            this.itemName = receipt.getItemName();
-            this.quantity = receipt.getQuantity();
-            this.totalAmount = receipt.getTotalAmount();
-            this.paymentTime = approveDto.getApproved_at();
-            this.paymentType = approveDto.getPayment_method_type();
-            this.paymentCompany = paymentCompany;
+        private BlockGainType blockGainType;
+        private BlockLossType blockLossType;
+
+        public static PaymentEntityDto initForKakao(PaymentReceiptDto receipt, KakaoPayApproveDto response) {
+            return PaymentEntityDto.builder()
+                .tid(receipt.getTid())
+                .memberId(Long.parseLong(receipt.getMemberId()))
+                .orderId(receipt.getOrderId())
+                .itemName(receipt.getItemName())
+                .blockQuantity(Integer.parseInt(receipt.getQuantity()))
+                .totalAmount(Integer.parseInt(receipt.getTotalAmount()))
+                .paymentTime(response.getApproved_at())
+                .paymentMethod(response.getPayment_method_type())
+                .blockGainType(BlockGainType.CASH)
+                .blockLossType(BlockLossType.NONE)
+                .paymentCompany("kakao")
+                .build();
+        }
+
+        public static PaymentEntityDto toDtoFromEntity(PaymentEntity entity) {
+            return PaymentEntityDto.builder()
+                .tid(entity.getTid())
+                .memberId(entity.getMemberId())
+                .orderId(entity.getOrderId())
+                .itemName(entity.getItemName())
+                .blockQuantity(entity.getBlockQuantity())
+                .totalAmount(entity.getTotalAmount())
+                .paymentTime(entity.getPaymentTime())
+                .paymentMethod(entity.getPaymentMethod().toString())
+                .blockGainType(entity.getBlockGainType())
+                .blockLossType(entity.getBlockLossType())
+                .paymentCompany(entity.getPaymentCompany())
+                .build();
+        }
+
+        public static PaymentEntityDto initForGameAndAttendance(ChargeBlockQuery query) {
+            return PaymentEntityDto.builder()
+                .tid("none")
+                .memberId(query.getMemberId())
+                .orderId(createOrderNumber(query.getMemberId()))
+                .itemName(query.getType())
+                .blockQuantity(query.getBlockQuantity())
+                .totalAmount(0)
+                .paymentTime(LocalDateTime.now())
+                .paymentMethod(PaymentMethod.FREE.toString())
+                .blockGainType(BlockGainType.findByValue(query.getType()))
+                .blockLossType(BlockLossType.NONE)
+                .paymentCompany("blockPage")
+                .build();
+        }
+
+        public static PaymentEntityDto initForInternalService(UpdateBlockQuery query) {
+            return PaymentEntityDto.builder()
+                .tid("none")
+                .memberId(query.getMemberId())
+                .orderId(createOrderNumber(query.getMemberId()))
+                .itemName(query.getType())
+                .blockQuantity(query.getBlockQuantity())
+                .totalAmount(0)
+                .paymentTime(LocalDateTime.now())
+                .paymentMethod(PaymentMethod.BLOCK.toString())
+                .blockGainType(BlockGainType.NONE)
+                .blockLossType(BlockLossType.findByValue(query.getType()))
+                .paymentCompany("blockPage")
+                .build();
         }
     }
 
@@ -260,7 +369,7 @@ public class PaymentService implements PaymentUseCase {
         }
     }
 
-    public String createOrderNumber(Long memberId) {
+    public static String createOrderNumber(Long memberId) {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
         String yyyyMmDd = LocalDate.now().toString().replace("-", "");

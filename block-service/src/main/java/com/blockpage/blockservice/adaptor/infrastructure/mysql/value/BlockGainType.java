@@ -10,6 +10,7 @@ public enum BlockGainType {
     GAME(0, "game"),
     ATTENDANCE(1, "attendance"),
     CASH(2, "cash"),
+    NONE(3, "none"),
     ;
     private int key;
     private String value;

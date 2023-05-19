@@ -5,6 +5,7 @@ import com.blockpage.blockservice.adaptor.web.requestbody.PaymentRequest;
 import com.blockpage.blockservice.application.service.PaymentService.PaymentHistoryDto;
 import com.blockpage.blockservice.application.service.PaymentService.PaymentResponseDto;
 import java.util.Arrays;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,7 @@ public interface PaymentUseCase {
 
     PaymentResponseDto paymentQuery(PaymentQuery query);
 
-    PaymentHistoryDto paymentHistoryQuery(PaymentHistoryQuery query);
+    List<PaymentHistoryDto> paymentHistoryQuery(PaymentHistoryQuery query);
 
     @Getter
     @Builder

@@ -5,10 +5,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PaymentType {
+public enum PaymentMethod {
     MONEY(0, "현금"),
     CARD(1, "카드"),
+    BLOCK(2, "블록"),
+    FREE(3,"무료"),
     ;
+
     private int key;
     private String value;
 
