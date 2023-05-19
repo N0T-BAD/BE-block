@@ -8,8 +8,10 @@ import lombok.Getter;
 public enum PaymentMethod {
     MONEY(0, "현금"),
     CARD(1, "카드"),
-    Block(2, "블록"),
+    BLOCK(2, "블록"),
+    FREE(3,"무료"),
     ;
+
     private int key;
     private String value;
 
