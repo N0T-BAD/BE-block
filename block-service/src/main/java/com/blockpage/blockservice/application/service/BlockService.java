@@ -1,11 +1,12 @@
 package com.blockpage.blockservice.application.service;
 
-import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.response.KakaoPayRefundResponse;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.application.port.in.BlockUseCase;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
+import com.blockpage.blockservice.application.port.out.PaymentPersistencePort;
+import com.blockpage.blockservice.application.service.PaymentService.PaymentEntityDto;
 import com.blockpage.blockservice.domain.Block;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BlockService implements BlockUseCase {
 
     private final BlockPersistencePort blockPersistencePort;
+    private final PaymentPersistencePort paymentPersistencePort;
 
     @Override
     public BlockQueryDto findAllBlock(FindBlockQuery query) {
@@ -35,13 +37,22 @@ public class BlockService implements BlockUseCase {
     @Transactional
     public void createBlock(ChargeBlockQuery query) {
         Block block = Block.initBlockForCharge(query);
-        blockPersistencePort.saveBlock(block);
+        switch (BlockGainType.findByValue(query.getType())) {
+            case CASH -> {
+                blockPersistencePort.saveBlock(block);
+            }
+            case GAME, ATTENDANCE -> {
+                paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForGameAndAttendance(query));
+                blockPersistencePort.saveBlock(block);
+            }
+        }
     }
 
     @Override
     @Transactional
     public void consumeBlock(UpdateBlockQuery query) {
         List<BlockEntity> blockEntityList = blockPersistencePort.updateBlockQuantity(query.getMemberId());
+        paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForInternalService(query));
         List<Block> blocks = blockEntityList.stream()
             .map(Block::toDomainFromEntity)
             .collect(Collectors.toList());
