@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 public class BlockRequest {
 
     private Integer blockQuantity;
+    private String type;
     private String orderId;
 }
