@@ -31,7 +31,7 @@ public class PaymentController {
     private final long MEMBER_TEST_ID = 1L;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<?>> postPayment(
+    public ResponseEntity<ApiResponse<PaymentView>> postPayment(
         @RequestParam String type,
         @RequestBody PaymentRequest paymentRequest
     ) {

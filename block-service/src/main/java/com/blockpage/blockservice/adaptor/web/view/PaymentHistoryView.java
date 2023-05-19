@@ -1,7 +1,5 @@
 package com.blockpage.blockservice.adaptor.web.view;
 
-import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
-import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
 import com.blockpage.blockservice.application.service.PaymentService.PaymentHistoryDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
