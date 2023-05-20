@@ -47,9 +47,9 @@ public class BlockController {
     }
 
     @PutMapping
-    public ResponseEntity<ApiResponse<String>> patchBlocks(@RequestBody BlockRequest blockRequest) {
+    public ResponseEntity<ApiResponse<BlockView>> patchBlocks(@RequestBody BlockRequest blockRequest) {
         blockUseCase.consumeBlock(UpdateBlockQuery.toQuery(MEMBER_TEST_ID, blockRequest));
         return ResponseEntity.status(HttpStatus.OK)
-            .body(new ApiResponse("블럭이 성공적으로 차감되었습니다."));
+            .body(new ApiResponse(new BlockView("블럭이 성공적으로 차감되었습니다.")));
     }
 }

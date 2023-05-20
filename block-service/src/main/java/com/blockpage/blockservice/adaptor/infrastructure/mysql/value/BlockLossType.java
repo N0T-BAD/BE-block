@@ -7,8 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum BlockLossType {
-    EPISODE_BM(0, "episode"),
-    PROFILE_SKIN(1, "profile-skin"),
+    EPISODE_BM_PAID(0, "episodeBMPaid"),
+    PROFILE_SKIN(1, "profileSkin"),
     NFT(2, "nft"),
     NONE(3, "none");
 
