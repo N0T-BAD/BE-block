@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: block-service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+  redis:
+    host: localhost
+    port: 6379
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+
+kakao:
+  pay:
+    api:
+      key: ${kakao.pay.api.key}
+      url: ${kakao.pay.api.url}
+      content-type: application/x-www-form-urlencoded;charset=utf-8
