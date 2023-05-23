@@ -1,5 +1,7 @@
 package com.blockpage.blockservice.application.service;
 
+import static com.blockpage.blockservice.exception.ErrorCode.*;
+
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayApprovalParams;
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayReadyParams;
 import com.blockpage.blockservice.adaptor.infrastructure.external.kakao.requestbody.KakaoPayRefundParams;
@@ -18,6 +20,7 @@ import com.blockpage.blockservice.application.port.out.PaymentCachingPort;
 import com.blockpage.blockservice.application.port.out.PaymentPersistencePort;
 import com.blockpage.blockservice.application.port.out.PaymentRequestPort;
 import com.blockpage.blockservice.domain.Block;
+import com.blockpage.blockservice.exception.BusinessException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -70,10 +73,10 @@ public class PaymentService implements PaymentUseCase {
                     blockPersistencePort.deleteBlockByOrderId(kakaoPayRefundDto.getOrderId());
                     return PaymentResponseDto.initFromKakaoRefundDto();
                 } else {
-                    throw new RuntimeException("환불 불가");
+                    throw new BusinessException(INCONSISTENT_BLOCK_QUANTITY.getMessage(), INCONSISTENT_BLOCK_QUANTITY.getHttpStatus());
                 }
             }
-            default -> throw new IllegalStateException("Unexpected value: " + query.getType());
+            default -> throw new BusinessException(WRONG_TYPE_FOR_PAYMENT_ERROR.getMessage(), WRONG_TYPE_FOR_PAYMENT_ERROR.getHttpStatus());
         }
     }
 
@@ -83,7 +86,7 @@ public class PaymentService implements PaymentUseCase {
         switch (PaymentType.findByValue(query.getType())) {
             case GAIN -> paymentEntityDtos = paymentPersistencePort.getBlockGainType(query.getMemberId());
             case LOSS -> paymentEntityDtos = paymentPersistencePort.getBlockLossType(query.getMemberId());
-            default -> throw new IllegalStateException("Unexpected value: " + query.getType());
+            default -> throw new BusinessException(WRONG_TYPE_FOR_PAYMENT_ERROR.getMessage(), WRONG_TYPE_FOR_PAYMENT_ERROR.getHttpStatus());
         }
         return paymentEntityDtos.stream()
             .map(PaymentHistoryDto::toHistoryDto)

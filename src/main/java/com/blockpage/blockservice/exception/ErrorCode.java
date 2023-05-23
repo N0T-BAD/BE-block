@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     //block
+    WRONG_TYPE_FOR_PAYMENT_ERROR("존재하지 않는 결제 과정입니다.", HttpStatus.NO_CONTENT),
     WRONG_ORDER_ID_ERROR("잘못된 주문 번호입니다.", HttpStatus.NO_CONTENT),
+    INCONSISTENT_BLOCK_QUANTITY("블럭이 이미 이용되어 환불이 불가합니다.", HttpStatus.NO_CONTENT),
 
     //feign client
     BLOCK_SERVICE_SERVER_UNAVAILABLE("블럭 서비스가 이용이 불가능합니다.", HttpStatus.NO_CONTENT),         //오류 메세지 검토 필요
