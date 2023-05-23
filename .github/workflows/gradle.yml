@@ -57,6 +57,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         envs: GITHUB_SHA
         script: |
+          docker-compose -f docker-compose.block.yml down
           docker pull geunskoo/block-service:${GITHUB_SHA::7}
           docker tag geunskoo/block-service:${GITHUB_SHA::7} block-service
       
