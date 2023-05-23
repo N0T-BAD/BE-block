@@ -11,6 +11,8 @@ import lombok.ToString;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaymentView {
 
+    private String message;
+
     private String tid;
     private String nextRedirectPcUrl;
 
@@ -24,6 +26,7 @@ public class PaymentView {
     private LocalDateTime approvedAt;
 
     public PaymentView(PaymentResponseDto paymentResponseDto) {
+        this.message = paymentResponseDto.getMessage();
         this.tid = paymentResponseDto.getTid();
         this.nextRedirectPcUrl = paymentResponseDto.getNext_redirect_pc_url();
         this.userId = paymentResponseDto.getPartner_user_id();

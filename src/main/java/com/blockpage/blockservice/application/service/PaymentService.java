@@ -143,6 +143,8 @@ public class PaymentService implements PaymentUseCase {
     @Builder
     public static class PaymentResponseDto {
 
+        private String message;
+
         private String tid;
         private LocalDateTime created_at;
 
@@ -184,6 +186,7 @@ public class PaymentService implements PaymentUseCase {
 
         public static PaymentResponseDto initFromKakaoRefundDto() {
             return PaymentResponseDto.builder()
+                .message("성공적으로 환불이 되었습니다.")
                 .build();
         }
     }
