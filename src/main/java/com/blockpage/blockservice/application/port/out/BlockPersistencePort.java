@@ -10,10 +10,14 @@ import lombok.Getter;
 
 public interface BlockPersistencePort {
 
-    List<Block> getMemberBlock(Long memberId);
-    Block saveBlock(Block block);
+    List<Block> getMemberBlock(Long memberId); //okay
+
+    void saveBlock(Block block);
+
     Block getBlockByOrderId(String orderId);
+
     List<BlockEntity> updateBlockQuantity(Long memberId);
+
     void deleteBlockByOrderId(String orderId);
 
     @Builder
