@@ -1,13 +1,15 @@
 package com.blockpage.blockservice.adaptor.infrastructure.mysql.persistence;
 
+import static com.blockpage.blockservice.exception.ErrorCode.*;
+
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.PaymentEntity;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.repository.PaymentRepository;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
 import com.blockpage.blockservice.application.port.out.PaymentPersistencePort;
 import com.blockpage.blockservice.application.service.PaymentService.PaymentEntityDto;
+import com.blockpage.blockservice.exception.BusinessException;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +20,16 @@ public class PaymentPersistenceAdaptor implements PaymentPersistencePort {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public PaymentEntityDto savePaymentRecord(PaymentEntityDto paymentEntityDto) {
-        PaymentEntity paymentEntity = paymentRepository.save(PaymentEntity.toEntity(paymentEntityDto));
-        return PaymentEntityDto.toDtoFromEntity(paymentEntity);
+    public void savePaymentRecord(PaymentEntityDto paymentEntityDto) {
+        paymentRepository.save(PaymentEntity.toEntity(paymentEntityDto));
     }
 
     @Override
     public PaymentEntityDto getPaymentByOrderId(String orderId) {
-        Optional<PaymentEntity> paymentEntity = paymentRepository.findByOrderId(orderId);
-        return PaymentEntityDto.toDtoFromEntity(paymentEntity.get());
+        PaymentEntity paymentEntity = paymentRepository.findByOrderId(orderId)
+            .orElseThrow(
+                () -> new BusinessException(NO_EXISTENCE_ORDER_ID_ERROR.getMessage(), NO_EXISTENCE_ORDER_ID_ERROR.getHttpStatus()));
+        return PaymentEntityDto.toDtoFromEntity(paymentEntity);
     }
 
     @Override

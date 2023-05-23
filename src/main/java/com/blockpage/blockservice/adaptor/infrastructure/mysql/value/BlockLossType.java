@@ -10,7 +10,8 @@ public enum BlockLossType {
     EPISODE_BM_PAID(0, "episodeBMPaid"),
     PROFILE_SKIN(1, "profileSkin"),
     NFT(2, "nft"),
-    NONE(3, "none");
+    REFUND(3, "refund"),
+    NONE(4, "none");
 
     private int key;
     private String value;
