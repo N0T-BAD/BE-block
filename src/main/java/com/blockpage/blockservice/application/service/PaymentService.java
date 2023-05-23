@@ -61,7 +61,7 @@ public class PaymentService implements PaymentUseCase {
                 PaymentReceiptDto receipt = paymentCachingPort.getPaymentReceiptByMemberId(query.getMemberId().toString());
                 KakaoPayApprovalParams kakaoPayApprovalParams = KakaoPayApprovalParams.addEssentialParams(query, receipt);
                 KakaoPayApproveDto response = paymentRequestPort.approval(kakaoPayApprovalParams);
-                paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForKakao(receipt, response));
+                paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForKakaoApprove(receipt, response));
                 return PaymentResponseDto.initFromKakaoApproveDto(response);
             }
             case KAKAO_PAY_REFUND -> {
@@ -71,6 +71,7 @@ public class PaymentService implements PaymentUseCase {
                     KakaoPayRefundParams kakaoPayRefundParams = KakaoPayRefundParams.addEssentialParams(paymentEntityDto);
                     KakaoPayRefundDto kakaoPayRefundDto = paymentRequestPort.cancel(kakaoPayRefundParams);
                     blockPersistencePort.deleteBlockByOrderId(kakaoPayRefundDto.getOrderId());
+                    paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForKakaoRefund(paymentEntityDto));
                     return PaymentResponseDto.initFromKakaoRefundDto();
                 } else {
                     throw new BusinessException(INCONSISTENT_BLOCK_QUANTITY.getMessage(), INCONSISTENT_BLOCK_QUANTITY.getHttpStatus());
@@ -206,7 +207,7 @@ public class PaymentService implements PaymentUseCase {
         private BlockGainType blockGainType;
         private BlockLossType blockLossType;
 
-        public static PaymentEntityDto initForKakao(PaymentReceiptDto receipt, KakaoPayApproveDto response) {
+        public static PaymentEntityDto initForKakaoApprove(PaymentReceiptDto receipt, KakaoPayApproveDto response) {
             return PaymentEntityDto.builder()
                 .tid(receipt.getTid())
                 .memberId(Long.parseLong(receipt.getMemberId()))
@@ -218,6 +219,22 @@ public class PaymentService implements PaymentUseCase {
                 .paymentMethod(response.getPayment_method_type())
                 .blockGainType(BlockGainType.CASH)
                 .blockLossType(BlockLossType.NONE)
+                .paymentCompany("kakao")
+                .build();
+        }
+
+        public static PaymentEntityDto initForKakaoRefund(PaymentEntityDto entityDto) {
+            return PaymentEntityDto.builder()
+                .tid(entityDto.getTid())
+                .memberId(entityDto.getMemberId())
+                .orderId(entityDto.getOrderId())
+                .itemName(entityDto.getItemName())
+                .blockQuantity(entityDto.getBlockQuantity())
+                .totalAmount(entityDto.getTotalAmount())
+                .paymentTime(entityDto.getPaymentTime())
+                .paymentMethod(entityDto.getPaymentMethod())
+                .blockGainType(BlockGainType.NONE)
+                .blockLossType(BlockLossType.REFUND)
                 .paymentCompany("kakao")
                 .build();
         }
