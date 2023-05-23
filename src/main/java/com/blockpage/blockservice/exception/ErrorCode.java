@@ -10,6 +10,7 @@ public enum ErrorCode {
     //block
     WRONG_TYPE_FOR_PAYMENT_ERROR("존재하지 않는 결제 과정입니다.", HttpStatus.NO_CONTENT),
     WRONG_ORDER_ID_ERROR("잘못된 주문 번호입니다.", HttpStatus.NO_CONTENT),
+    NO_EXISTENCE_ORDER_ID_ERROR("존재하지 않은 주문 번호입니다.", HttpStatus.NO_CONTENT),
     INCONSISTENT_BLOCK_QUANTITY("블럭이 이미 이용되어 환불이 불가합니다.", HttpStatus.NO_CONTENT),
 
     //feign client
