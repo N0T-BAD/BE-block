@@ -1,11 +1,13 @@
 package com.blockpage.blockservice.adaptor.infrastructure.mysql.persistence;
 
+import static com.blockpage.blockservice.exception.ErrorCode.*;
+
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.entity.BlockEntity;
 import com.blockpage.blockservice.adaptor.infrastructure.mysql.repository.BlockRepository;
 import com.blockpage.blockservice.application.port.out.BlockPersistencePort;
 import com.blockpage.blockservice.domain.Block;
+import com.blockpage.blockservice.exception.BusinessException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,9 +19,8 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     private final BlockRepository blockRepository;
 
     @Override
-    public Block saveBlock(Block block) {
-        BlockEntity blockEntity = blockRepository.save(BlockEntity.toEntity(block));
-        return Block.toDomainFromEntity(blockEntity);
+    public void saveBlock(Block block) {
+        blockRepository.save(BlockEntity.toEntity(block));
     }
 
     @Override
@@ -32,8 +33,9 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
 
     @Override
     public Block getBlockByOrderId(String orderId) {
-        Optional<BlockEntity> blockEntity = blockRepository.findByOrderId(orderId);
-        return Block.toDomainFromEntity(blockEntity.get());
+        BlockEntity entity = blockRepository.findByOrderId(orderId)
+            .orElseThrow(() -> new BusinessException(WRONG_ORDER_ID_ERROR.getMessage(), WRONG_ORDER_ID_ERROR.getHttpStatus()));
+        return Block.toDomainFromEntity(entity);
     }
 
     @Override
