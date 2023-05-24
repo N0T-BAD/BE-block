@@ -24,7 +24,7 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     }
 
     @Override
-    public List<Block> getMemberBlock(Long memberId) {
+    public List<Block> getMemberBlock(String memberId) {
         List<BlockEntity> blockEntities = blockRepository.findByMemberId(memberId);
         return blockEntities.stream()
             .map(Block::toDomainFromEntity)
@@ -39,7 +39,7 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     }
 
     @Override
-    public List<BlockEntity> updateBlockQuantity(Long memberId) {
+    public List<BlockEntity> updateBlockQuantity(String memberId) {
         return blockRepository.findByMemberId(memberId);
     }
 

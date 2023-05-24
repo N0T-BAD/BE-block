@@ -16,12 +16,12 @@ public interface BlockUseCase {
     @Builder
     class ChargeBlockQuery {
 
-        private Long memberId;
+        private String memberId;
         private String type;
         public String orderId;
         private Integer blockQuantity;
 
-        public static ChargeBlockQuery toQuery(Long memberId, String type, BlockRequest request) {
+        public static ChargeBlockQuery toQuery(String memberId, String type, BlockRequest request) {
             return ChargeBlockQuery.builder()
                 .type(type)
                 .memberId(memberId)
@@ -35,11 +35,11 @@ public interface BlockUseCase {
     @Builder
     class UpdateBlockQuery {
 
-        private Long memberId;
+        private String memberId;
         private String type;
         private Integer blockQuantity;
 
-        public static UpdateBlockQuery toQuery(Long memberId, BlockRequest request) {
+        public static UpdateBlockQuery toQuery(String memberId, BlockRequest request) {
             return UpdateBlockQuery.builder()
                 .type(request.getType())
                 .blockQuantity(request.getBlockQuantity())
@@ -52,6 +52,6 @@ public interface BlockUseCase {
     @AllArgsConstructor
     class FindBlockQuery {
 
-        private Long memberId;
+        private String memberId;
     }
 }

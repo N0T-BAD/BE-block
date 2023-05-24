@@ -76,7 +76,7 @@ public class BlockService implements BlockUseCase {
     @AllArgsConstructor
     public class BlockQueryDto {
 
-        private Long memberId;
+        private String memberId;
         private Integer totalBlocks;
     }
 }

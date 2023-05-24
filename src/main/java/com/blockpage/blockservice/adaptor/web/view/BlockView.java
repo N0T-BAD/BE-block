@@ -10,7 +10,7 @@ import lombok.Getter;
 public class BlockView {
 
     private String message;
-    private Long memberId;
+    private String memberId;
     private Integer totalBlocks;
 
     public BlockView(BlockQueryDto blockQueryDto) {

@@ -28,7 +28,7 @@ public class PaymentController {
 
     private final PaymentUseCase paymentUseCase;
 
-    private final long MEMBER_TEST_ID = 1L;
+    private final String MEMBER_TEST_ID = "oryukdo3@naver.com";
 
     @PostMapping
     public ResponseEntity<ApiResponse<PaymentView>> postPayment(

@@ -11,7 +11,7 @@ import lombok.Getter;
 @JsonInclude(Include.NON_NULL)
 public class PaymentHistoryView {
 
-    private Long memberId;
+    private String memberId;
 
     private String itemName;
     private Integer blockQuantity;

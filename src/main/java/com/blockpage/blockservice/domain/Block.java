@@ -19,7 +19,7 @@ public class Block {
     private static final long EXPIRED_BLOCK_YEAR = 5l;
 
     private Long blockId;
-    private Long memberId;
+    private String memberId;
     private String orderId;
     private Integer blockQuantity;
     private GainType gainType;

@@ -10,13 +10,13 @@ import lombok.Getter;
 
 public interface BlockPersistencePort {
 
-    List<Block> getMemberBlock(Long memberId);
+    List<Block> getMemberBlock(String memberId);
 
     void saveBlock(Block block);
 
     Block getBlockByOrderId(String orderId);
 
-    List<BlockEntity> updateBlockQuantity(Long memberId); //리팩터링 필요, 헥사고날 아키텍쳐 구조에 부합하지 않은 로직
+    List<BlockEntity> updateBlockQuantity(String memberId); //리팩터링 필요, 헥사고날 아키텍쳐 구조에 부합하지 않은 로직
 
     void deleteBlockByOrderId(String orderId);
 
@@ -25,7 +25,7 @@ public interface BlockPersistencePort {
     class BlockEntityDto {
 
         private Long id;
-        private Long memberId;
+        private String memberId;
         private String orderId;
         private Integer blockQuantity;
         private Boolean blockValidate;

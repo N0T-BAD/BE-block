@@ -33,7 +33,7 @@ public class PaymentPersistenceAdaptor implements PaymentPersistencePort {
     }
 
     @Override
-    public List<PaymentEntityDto> getBlockGainType(Long memberId) {
+    public List<PaymentEntityDto> getBlockGainType(String memberId) {
         List<PaymentEntity> paymentEntityList = paymentRepository.findByMemberIdAndBlockGainTypeNot(memberId, BlockGainType.NONE);
         return paymentEntityList.stream()
             .map(PaymentEntityDto::toDtoFromEntity)
@@ -41,7 +41,7 @@ public class PaymentPersistenceAdaptor implements PaymentPersistencePort {
     }
 
     @Override
-    public List<PaymentEntityDto> getBlockLossType(Long memberId) {
+    public List<PaymentEntityDto> getBlockLossType(String memberId) {
         List<PaymentEntity> paymentEntityList = paymentRepository.findByMemberIdAndBlockLossTypeNot(memberId, BlockLossType.NONE);
         return paymentEntityList.stream()
             .map(PaymentEntityDto::toDtoFromEntity)
