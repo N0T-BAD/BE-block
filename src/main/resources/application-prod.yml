@@ -1,6 +1,13 @@
 server:
   port: 8080
 
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka.client.service-url.defaultZone }
+
 spring:
   application:
     name: block-service
@@ -10,7 +17,7 @@ spring:
     url: ${spring.datasource.url}
     username: ${spring.datasource.username}
     password: ${spring.datasource.password}
-    
+
   redis:
     host: host.docker.internal
     port: 6379
