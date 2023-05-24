@@ -32,6 +32,7 @@ jobs:
         spring.datasource.password: ${{ secrets.DB_PASSWORD }}
         kakao.pay.api.key: ${{ secrets.KAKAO_PAY_API_KEY }}
         kakao.pay.api.url: ${{ secrets.KAKAO_PAY_API_URL }}
+        eureka.client.service-url.defaultZone: ${{ secrets.EUREKA_DEFAULT_ZONE }}
     
     # Gradlew 실행 허용
     - name: Run chmod to make gradlew executable
