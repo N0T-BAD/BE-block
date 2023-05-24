@@ -2,4 +2,3 @@ spring:
   config:
     import:
       - application-prod.yml
-      - application-dev.yml
