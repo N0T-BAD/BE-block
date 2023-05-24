@@ -6,7 +6,7 @@ public interface PaymentPersistencePort {
 
     void savePaymentRecord(PaymentEntityDto paymentEntityDto);
     PaymentEntityDto getPaymentByOrderId(String orderId);
-    List<PaymentEntityDto> getBlockLossType(Long memberId);
-    List<PaymentEntityDto> getBlockGainType(Long memberId);
+    List<PaymentEntityDto> getBlockLossType(String memberId);
+    List<PaymentEntityDto> getBlockGainType(String memberId);
 
 }

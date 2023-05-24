@@ -11,7 +11,7 @@ public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
 
     Optional<PaymentEntity> findByOrderId(String orderId);
 
-    List<PaymentEntity> findByMemberIdAndBlockGainTypeNot(Long memberId, BlockGainType blockGainType);
+    List<PaymentEntity> findByMemberIdAndBlockGainTypeNot(String memberId, BlockGainType blockGainType);
 
-    List<PaymentEntity> findByMemberIdAndBlockLossTypeNot(Long memberId, BlockLossType blockLossType);
+    List<PaymentEntity> findByMemberIdAndBlockLossTypeNot(String memberId, BlockLossType blockLossType);
 }

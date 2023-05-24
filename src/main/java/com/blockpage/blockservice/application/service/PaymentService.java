@@ -115,7 +115,7 @@ public class PaymentService implements PaymentUseCase {
     @Builder
     public static class PaymentHistoryDto {
 
-        private Long memberId;
+        private String memberId;
 
         private String itemName;
         private Integer blockQuantity;
@@ -195,7 +195,7 @@ public class PaymentService implements PaymentUseCase {
     @Builder
     public static class PaymentEntityDto {
 
-        private Long memberId;
+        private String memberId;
         private String tid;
         private String orderId;
 
@@ -213,7 +213,7 @@ public class PaymentService implements PaymentUseCase {
         public static PaymentEntityDto initForKakaoApprove(PaymentReceiptDto receipt, KakaoPayApproveDto response) {
             return PaymentEntityDto.builder()
                 .tid(receipt.getTid())
-                .memberId(Long.parseLong(receipt.getMemberId()))
+                .memberId(receipt.getMemberId())
                 .orderId(receipt.getOrderId())
                 .itemName(receipt.getItemName())
                 .blockQuantity(Integer.parseInt(receipt.getQuantity()))
@@ -392,7 +392,7 @@ public class PaymentService implements PaymentUseCase {
         }
     }
 
-    public static String createOrderNumber(Long memberId) {
+    public static String createOrderNumber(String memberId) {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
         String yyyyMmDd = LocalDate.now().toString().replace("-", "");
@@ -400,6 +400,6 @@ public class PaymentService implements PaymentUseCase {
             .limit(6)
             .map(String::valueOf)
             .collect(Collectors.joining());
-        return yyyyMmDd + memberId.toString() + randomNumbers;
+        return yyyyMmDd + memberId.length() + randomNumbers;
     }
 }

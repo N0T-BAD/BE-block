@@ -28,7 +28,7 @@ public class BlockEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Long memberId;
+    private String memberId;
     @Column
     private String orderId;
     @Column

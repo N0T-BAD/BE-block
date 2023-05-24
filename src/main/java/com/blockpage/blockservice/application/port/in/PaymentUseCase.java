@@ -22,7 +22,7 @@ public interface PaymentUseCase {
 
         //common
         private CorpAndStep type;
-        private Long memberId;
+        private String memberId;
         //ready
         private String itemName;
         private Integer blockQuantity;
@@ -32,7 +32,7 @@ public interface PaymentUseCase {
         //refund
         private String orderId;
 
-        public static PaymentQuery toQuery(Long memberId, String type, PaymentRequest request) {
+        public static PaymentQuery toQuery(String memberId, String type, PaymentRequest request) {
             return PaymentQuery.builder()
                 .memberId(memberId)
                 .type(CorpAndStep.findByValue(type))
@@ -49,10 +49,10 @@ public interface PaymentUseCase {
     @Builder
     class PaymentHistoryQuery {
 
-        private Long memberId;
+        private String memberId;
         private String type;
 
-        public static PaymentHistoryQuery toQuery(Long memberId, String type) {
+        public static PaymentHistoryQuery toQuery(String memberId, String type) {
             return PaymentHistoryQuery.builder()
                 .memberId(memberId)
                 .type(type)

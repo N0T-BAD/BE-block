@@ -30,7 +30,7 @@ public class PaymentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private Long memberId;
+    private String memberId;
     @Column
     private String orderId;
     @Column
@@ -57,7 +57,7 @@ public class PaymentEntity {
 
     public static PaymentEntity toEntity(PaymentEntityDto paymentEntityDto) {
         return PaymentEntity.builder()
-            .memberId(Long.valueOf(paymentEntityDto.getMemberId()))
+            .memberId((paymentEntityDto.getMemberId()))
             .orderId(paymentEntityDto.getOrderId())
             .tid(paymentEntityDto.getTid())
             .itemName(paymentEntityDto.getItemName())

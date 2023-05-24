@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/block-service/v1/blocks")
 public class BlockController {
 
-    private final Long MEMBER_TEST_ID = 1L;
+    private final String MEMBER_TEST_ID = "oryukdo3@naver.com";
 
     private final BlockUseCase blockUseCase;
 

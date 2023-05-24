@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BlockRepository extends JpaRepository<BlockEntity, Long> {
 
-    List<BlockEntity> findByMemberId(Long memberId);
+    List<BlockEntity> findByMemberId(String memberId);
 
     Optional<BlockEntity> findByOrderId(String orderId);
 
