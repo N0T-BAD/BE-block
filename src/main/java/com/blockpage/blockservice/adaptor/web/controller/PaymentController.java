@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/payments")
+@RequestMapping("/block-service/v1/payments")
 public class PaymentController {
 
     private final PaymentUseCase paymentUseCase;

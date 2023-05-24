@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/blocks")
+@RequestMapping("/block-service/v1/blocks")
 public class BlockController {
 
     private final Long MEMBER_TEST_ID = 1L;
