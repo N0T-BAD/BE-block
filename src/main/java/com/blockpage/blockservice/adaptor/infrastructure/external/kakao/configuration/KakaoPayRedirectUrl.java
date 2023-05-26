@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum KakaoPayRedirectUrl {
 
-    KAKAO_APPROVAL_URL("https://localhost:3000/chargereult", "결제 승인"),
+    KAKAO_APPROVAL_URL("https://localhost:3000/chargeresult", "결제 승인"),
 
     KAKAO_CANCEL_URL("https://localhost:3000/v1/purchases/cancel", "결제 취소"),
 
