@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,22 +29,21 @@ public class PaymentController {
 
     private final PaymentUseCase paymentUseCase;
 
-    private final String MEMBER_TEST_ID = "oryukdo3@naver.com";
-
     @PostMapping
     public ResponseEntity<ApiResponse<PaymentView>> postPayment(
+        @RequestHeader String memberId,
         @RequestParam String type,
         @RequestBody PaymentRequest paymentRequest
     ) {
-        PaymentResponseDto paymentResponseDto = paymentUseCase.paymentQuery(PaymentQuery.toQuery(MEMBER_TEST_ID, type, paymentRequest));
+        PaymentResponseDto paymentResponseDto = paymentUseCase.paymentQuery(PaymentQuery.toQuery(memberId, type, paymentRequest));
         return ResponseEntity.status(HttpStatus.OK)
             .body(new ApiResponse<>(new PaymentView(paymentResponseDto)));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PaymentHistoryView>>> getPayment(@RequestParam String type) {
+    public ResponseEntity<ApiResponse<List<PaymentHistoryView>>> getPayment(@RequestHeader String memberId, @RequestParam String type) {
         List<PaymentHistoryDto> paymentHistoryDtos = paymentUseCase.paymentHistoryQuery(
-            PaymentUseCase.PaymentHistoryQuery.toQuery(MEMBER_TEST_ID, type));
+            PaymentUseCase.PaymentHistoryQuery.toQuery(memberId, type));
         List<PaymentHistoryView> paymentHistoryViews = paymentHistoryDtos.stream()
             .map(PaymentHistoryView::new)
             .toList();
