@@ -10,4 +10,7 @@ public class BlockRequest {
     private Integer blockQuantity;
     private String type;
     private String orderId;
+
+    private Integer episodeNumber;
+    private String webtoonTitle;
 }
