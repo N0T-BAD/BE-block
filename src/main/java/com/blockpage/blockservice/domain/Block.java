@@ -55,7 +55,7 @@ public class Block {
             .filter(Block::isValid)
             .map(Block::getBlockQuantity)
             .reduce(Integer::sum)
-            .get();
+            .orElseGet(() -> 0);
     }
 
     private void minusQuantity(Integer blockQuantity) {
