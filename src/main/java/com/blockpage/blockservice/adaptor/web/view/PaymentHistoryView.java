@@ -17,6 +17,7 @@ public class PaymentHistoryView {
     private String memberId;
 
     private Integer blockQuantity;
+    private Integer totalAmount;
 
     private String paymentTime;
 
@@ -29,6 +30,7 @@ public class PaymentHistoryView {
 
     public PaymentHistoryView(PaymentHistoryDto paymentHistoryDto) {
         this.memberId = paymentHistoryDto.getMemberId();
+        this.totalAmount = paymentHistoryDto.getTotalAmount() == 0 ? null : paymentHistoryDto.getTotalAmount();
         this.blockGainType =
             (paymentHistoryDto.getBlockGainType() != BlockGainType.NONE) ? paymentHistoryDto.getBlockGainType().getView() : null;
         this.blockLossType =
