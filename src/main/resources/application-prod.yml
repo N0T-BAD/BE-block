@@ -6,7 +6,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: ${eureka.client.service-url.defaultZone }
+      defaultZone: ${eureka.client.service-url.defaultZone }https://github.com/N0T-BAD/BE-block/blob/develop/src/main/resources/application-prod.yml
 
 spring:
   application:
@@ -28,7 +28,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
 feign:
