@@ -9,7 +9,9 @@ import lombok.Getter;
 public interface BlockUseCase {
 
     BlockQueryDto findAllBlock(FindBlockQuery findBlockQuery);
+
     void createBlock(ChargeBlockQuery query);
+
     void consumeBlock(UpdateBlockQuery query);
 
     @Getter
@@ -39,10 +41,15 @@ public interface BlockUseCase {
         private String type;
         private Integer blockQuantity;
 
+        private Integer episodeNumber;
+        private String webtoonTitle;
+
         public static UpdateBlockQuery toQuery(String memberId, BlockRequest request) {
             return UpdateBlockQuery.builder()
                 .type(request.getType())
                 .blockQuantity(request.getBlockQuantity())
+                .episodeNumber(request.getEpisodeNumber())
+                .webtoonTitle(request.getWebtoonTitle())
                 .memberId(memberId)
                 .build();
         }

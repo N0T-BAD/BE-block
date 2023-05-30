@@ -1,10 +1,13 @@
 package com.blockpage.blockservice.adaptor.web.view;
 
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockGainType;
+import com.blockpage.blockservice.adaptor.infrastructure.mysql.value.BlockLossType;
 import com.blockpage.blockservice.application.service.PaymentService.PaymentHistoryDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 
 @Getter
@@ -13,22 +16,28 @@ public class PaymentHistoryView {
 
     private String memberId;
 
-    private String itemName;
     private Integer blockQuantity;
-    private Integer totalAmount;
 
-    private LocalDateTime paymentTime;
+    private String paymentTime;
 
     private String blockGainType;
     private String blockLossType;
 
+    private String episodeBMDetail;
+
+    private String orderId;
+
     public PaymentHistoryView(PaymentHistoryDto paymentHistoryDto) {
         this.memberId = paymentHistoryDto.getMemberId();
-        this.itemName = paymentHistoryDto.getItemName();
+        this.blockGainType =
+            (paymentHistoryDto.getBlockGainType() != BlockGainType.NONE) ? paymentHistoryDto.getBlockGainType().getView() : null;
+        this.blockLossType =
+            paymentHistoryDto.getBlockLossType() != BlockLossType.NONE ? paymentHistoryDto.getBlockLossType().getView() : null;
         this.blockQuantity = paymentHistoryDto.getBlockQuantity();
-        this.totalAmount = paymentHistoryDto.getTotalAmount();
-        this.paymentTime = paymentHistoryDto.getPaymentTime();
-        this.blockGainType = paymentHistoryDto.getBlockGainType() != null ? paymentHistoryDto.getBlockGainType().toString() : null;
-        this.blockLossType = paymentHistoryDto.getBlockLossType() != null ? paymentHistoryDto.getBlockLossType().toString() : null;
+        this.paymentTime = paymentHistoryDto.getPaymentTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.episodeBMDetail =
+            paymentHistoryDto.getEpisodeNumber() != null ? paymentHistoryDto.getWebtoonTitle() + " " + paymentHistoryDto.getEpisodeNumber()
+                .toString() + "화" : null;
+        this.orderId = paymentHistoryDto.getOrderId();
     }
 }

@@ -54,6 +54,10 @@ public class PaymentEntity {
     private LocalDateTime paymentTime;
     @Column
     private Integer totalAmount;
+    @Column
+    private Integer episodeNumber;
+    @Column
+    private String webtoonTitle;
 
     public static PaymentEntity toEntity(PaymentEntityDto paymentEntityDto) {
         return PaymentEntity.builder()
@@ -68,6 +72,8 @@ public class PaymentEntity {
             .blockLossType(paymentEntityDto.getBlockLossType())
             .blockGainType(paymentEntityDto.getBlockGainType())
             .paymentCompany(paymentEntityDto.getPaymentCompany())
+            .episodeNumber(paymentEntityDto.getEpisodeNumber())
+            .webtoonTitle(paymentEntityDto.getWebtoonTitle())
             .build();
     }
 }

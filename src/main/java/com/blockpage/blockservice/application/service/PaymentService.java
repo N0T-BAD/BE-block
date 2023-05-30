@@ -116,6 +116,7 @@ public class PaymentService implements PaymentUseCase {
     public static class PaymentHistoryDto {
 
         private String memberId;
+        private String orderId;
 
         private String itemName;
         private Integer blockQuantity;
@@ -126,15 +127,21 @@ public class PaymentService implements PaymentUseCase {
         private BlockGainType blockGainType;
         private BlockLossType blockLossType;
 
+        private Integer episodeNumber;
+        private String webtoonTitle;
+
         public static PaymentHistoryDto toHistoryDto(PaymentEntityDto paymentEntityDto) {
             return PaymentHistoryDto.builder()
                 .memberId(paymentEntityDto.getMemberId())
+                .orderId(paymentEntityDto.getOrderId())
                 .itemName(paymentEntityDto.getItemName())
                 .blockQuantity(paymentEntityDto.getBlockQuantity())
                 .totalAmount(paymentEntityDto.getTotalAmount())
                 .paymentTime(paymentEntityDto.getPaymentTime())
                 .blockGainType(paymentEntityDto.getBlockGainType())
                 .blockLossType(paymentEntityDto.getBlockLossType())
+                .episodeNumber(paymentEntityDto.getEpisodeNumber())
+                .webtoonTitle(paymentEntityDto.getWebtoonTitle())
                 .build();
         }
     }
@@ -210,6 +217,9 @@ public class PaymentService implements PaymentUseCase {
         private BlockGainType blockGainType;
         private BlockLossType blockLossType;
 
+        private Integer episodeNumber;
+        private String webtoonTitle;
+
         public static PaymentEntityDto initForKakaoApprove(PaymentReceiptDto receipt, KakaoPayApproveDto response) {
             return PaymentEntityDto.builder()
                 .tid(receipt.getTid())
@@ -255,6 +265,8 @@ public class PaymentService implements PaymentUseCase {
                 .blockGainType(entity.getBlockGainType())
                 .blockLossType(entity.getBlockLossType())
                 .paymentCompany(entity.getPaymentCompany())
+                .episodeNumber(entity.getEpisodeNumber())
+                .webtoonTitle(entity.getWebtoonTitle())
                 .build();
         }
 
@@ -287,6 +299,8 @@ public class PaymentService implements PaymentUseCase {
                 .blockGainType(BlockGainType.NONE)
                 .blockLossType(BlockLossType.findByValue(query.getType()))
                 .paymentCompany("blockPage")
+                .episodeNumber(query.getEpisodeNumber())
+                .webtoonTitle(query.getWebtoonTitle())
                 .build();
         }
     }

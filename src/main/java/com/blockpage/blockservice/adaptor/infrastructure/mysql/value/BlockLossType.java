@@ -7,14 +7,15 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum BlockLossType {
-    EPISODE_BM_PAID(0, "episodeBMPaid"),
-    PROFILE_SKIN(1, "profileSkin"),
-    NFT(2, "nft"),
-    REFUND(3, "refund"),
-    NONE(4, "none");
+    EPISODE_BM_PAID(0, "episodeBMPaid", "에피소드"),
+    PROFILE_SKIN(1, "profileSkin", "프로필 스킨"),
+    NFT(2, "nft", "NFT"),
+    REFUND(3, "refund", "블럭 환불"),
+    NONE(4, "none", "-");
 
     private int key;
     private String value;
+    private String view;
 
     public static BlockLossType findByValue(String value) {
         return Arrays.stream(BlockLossType.values())

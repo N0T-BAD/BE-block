@@ -52,12 +52,12 @@ public class BlockService implements BlockUseCase {
     @Transactional
     public void consumeBlock(UpdateBlockQuery query) {
         List<BlockEntity> blockEntityList = blockPersistencePort.updateBlockQuantity(query.getMemberId());
-        paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForInternalService(query));
         List<Block> blocks = blockEntityList.stream()
             .map(Block::toDomainFromEntity)
             .collect(Collectors.toList());
         List<Block> consumeBlocks = Block.comsumeBlockList(blocks, query.getBlockQuantity());
         consumeBlockQuantity(blockEntityList, consumeBlocks);
+        paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForInternalService(query));
     }
 
     //==서비스 Layer 편의 메서드==//
