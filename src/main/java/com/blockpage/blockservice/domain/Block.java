@@ -17,6 +17,7 @@ import lombok.Getter;
 public class Block {
 
     private static final long EXPIRED_BLOCK_YEAR = 5l;
+    private static final long VALID_BLOCK_FOR_REFUND_DAY = 7l;
 
     private Long blockId;
     private String memberId;
@@ -25,6 +26,8 @@ public class Block {
     private GainType gainType;
     private Boolean blockValidate;
     private LocalDateTime expiredDate;
+    private LocalDateTime registerTime;
+    private LocalDateTime updateTime;
 
     public static List<Block> comsumeBlockList(List<Block> blocks, Integer blockQuantity) {
         if (getTotalBlock(blocks) < blockQuantity) {
@@ -78,18 +81,6 @@ public class Block {
             .build();
     }
 
-    public static Block initBlockFromEntityDto(BlockEntityDto dto) {
-        return Block.builder()
-            .blockId(dto.getId())
-            .memberId(dto.getMemberId())
-            .orderId(dto.getOrderId())
-            .gainType(GainType.findByValue(dto.getBlockGainType().getValue()))
-            .blockQuantity(dto.getBlockQuantity())
-            .blockValidate(dto.getBlockValidate())
-            .expiredDate(dto.getExpiredDate())
-            .build();
-    }
-
     public static Block toDomainFromEntity(BlockEntity blockEntity) {
         return Block.builder()
             .blockId(blockEntity.getId())
@@ -99,7 +90,14 @@ public class Block {
             .blockQuantity(blockEntity.getBlockQuantity())
             .blockValidate(blockEntity.getBlockValidate())
             .expiredDate(blockEntity.getExpiredDate())
+            .registerTime(blockEntity.getRegisterTime())
+            .updateTime(blockEntity.getUpdateTime())
             .build();
+    }
+
+    public boolean isAvailableRefund() {
+        LocalDateTime availableRefundDate = this.registerTime.plusDays(VALID_BLOCK_FOR_REFUND_DAY);
+        return availableRefundDate.isAfter(LocalDateTime.now());
     }
 
     public enum GainType {

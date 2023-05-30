@@ -6,7 +6,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: ${eureka.client.service-url.defaultZone }https://github.com/N0T-BAD/BE-block/blob/develop/src/main/resources/application-prod.yml
+      defaultZone: ${eureka.client.service-url.defaultZone }
 
 spring:
   application:

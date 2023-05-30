@@ -17,6 +17,7 @@ public class PaymentHistoryView {
     private String memberId;
 
     private Integer blockQuantity;
+    private Integer totalAmount;
 
     private String paymentTime;
 
@@ -27,8 +28,11 @@ public class PaymentHistoryView {
 
     private String orderId;
 
+    private Boolean validState;
+
     public PaymentHistoryView(PaymentHistoryDto paymentHistoryDto) {
         this.memberId = paymentHistoryDto.getMemberId();
+        this.totalAmount = paymentHistoryDto.getTotalAmount() == 0 ? null : paymentHistoryDto.getTotalAmount();
         this.blockGainType =
             (paymentHistoryDto.getBlockGainType() != BlockGainType.NONE) ? paymentHistoryDto.getBlockGainType().getView() : null;
         this.blockLossType =
@@ -39,5 +43,6 @@ public class PaymentHistoryView {
             paymentHistoryDto.getEpisodeNumber() != null ? paymentHistoryDto.getWebtoonTitle() + " " + paymentHistoryDto.getEpisodeNumber()
                 .toString() + "화" : null;
         this.orderId = paymentHistoryDto.getOrderId();
+        this.validState = paymentHistoryDto.getValidState();
     }
 }
