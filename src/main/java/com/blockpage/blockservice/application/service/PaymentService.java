@@ -67,7 +67,7 @@ public class PaymentService implements PaymentUseCase {
             case KAKAO_PAY_REFUND -> {
                 PaymentEntityDto paymentEntityDto = paymentPersistencePort.getPaymentByOrderId(query.getOrderId());
                 Block orderedBlock = blockPersistencePort.getBlockByOrderId(query.getOrderId());
-                if (orderedBlock.getBlockQuantity().equals(paymentEntityDto.getBlockQuantity())) {
+                if (orderedBlock.getBlockQuantity().equals(paymentEntityDto.getBlockQuantity()) && orderedBlock.isAvailableRefund()) {
                     KakaoPayRefundParams kakaoPayRefundParams = KakaoPayRefundParams.addEssentialParams(paymentEntityDto);
                     KakaoPayRefundDto kakaoPayRefundDto = paymentRequestPort.cancel(kakaoPayRefundParams);
                     blockPersistencePort.deleteBlockByOrderId(kakaoPayRefundDto.getOrderId());
