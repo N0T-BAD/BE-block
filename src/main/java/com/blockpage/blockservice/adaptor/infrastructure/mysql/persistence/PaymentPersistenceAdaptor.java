@@ -41,6 +41,14 @@ public class PaymentPersistenceAdaptor implements PaymentPersistencePort {
     }
 
     @Override
+    public void updateValidStatePaymentRecord(String orderId) {
+        PaymentEntity paymentEntity = paymentRepository.findByOrderId(orderId)
+            .orElseThrow(
+                () -> new BusinessException(NO_EXISTENCE_ORDER_ID_ERROR.getMessage(), NO_EXISTENCE_ORDER_ID_ERROR.getHttpStatus()));
+        paymentEntity.updateValidState();
+    }
+
+    @Override
     public List<PaymentEntityDto> getBlockLossType(String memberId) {
         List<PaymentEntity> paymentEntityList = paymentRepository.findByMemberIdAndBlockLossTypeNot(memberId, BlockLossType.NONE);
         return paymentEntityList.stream()

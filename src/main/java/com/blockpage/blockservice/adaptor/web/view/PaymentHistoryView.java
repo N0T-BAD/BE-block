@@ -28,6 +28,8 @@ public class PaymentHistoryView {
 
     private String orderId;
 
+    private Boolean validState;
+
     public PaymentHistoryView(PaymentHistoryDto paymentHistoryDto) {
         this.memberId = paymentHistoryDto.getMemberId();
         this.totalAmount = paymentHistoryDto.getTotalAmount() == 0 ? null : paymentHistoryDto.getTotalAmount();
@@ -41,5 +43,6 @@ public class PaymentHistoryView {
             paymentHistoryDto.getEpisodeNumber() != null ? paymentHistoryDto.getWebtoonTitle() + " " + paymentHistoryDto.getEpisodeNumber()
                 .toString() + "화" : null;
         this.orderId = paymentHistoryDto.getOrderId();
+        this.validState = paymentHistoryDto.getValidState();
     }
 }

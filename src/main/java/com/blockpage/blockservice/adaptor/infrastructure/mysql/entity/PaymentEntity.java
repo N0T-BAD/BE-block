@@ -58,6 +58,8 @@ public class PaymentEntity {
     private Integer episodeNumber;
     @Column
     private String webtoonTitle;
+    @Column
+    private Boolean validState;
 
     public static PaymentEntity toEntity(PaymentEntityDto paymentEntityDto) {
         return PaymentEntity.builder()
@@ -74,6 +76,11 @@ public class PaymentEntity {
             .paymentCompany(paymentEntityDto.getPaymentCompany())
             .episodeNumber(paymentEntityDto.getEpisodeNumber())
             .webtoonTitle(paymentEntityDto.getWebtoonTitle())
+            .validState(paymentEntityDto.getValidState())
             .build();
+    }
+
+    public void updateValidState() {
+        this.validState = !this.validState;
     }
 }

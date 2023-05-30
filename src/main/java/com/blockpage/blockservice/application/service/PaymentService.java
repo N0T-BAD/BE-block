@@ -71,6 +71,7 @@ public class PaymentService implements PaymentUseCase {
                     KakaoPayRefundParams kakaoPayRefundParams = KakaoPayRefundParams.addEssentialParams(paymentEntityDto);
                     KakaoPayRefundDto kakaoPayRefundDto = paymentRequestPort.cancel(kakaoPayRefundParams);
                     blockPersistencePort.deleteBlockByOrderId(kakaoPayRefundDto.getOrderId());
+                    paymentPersistencePort.updateValidStatePaymentRecord(query.getOrderId());
                     paymentPersistencePort.savePaymentRecord(PaymentEntityDto.initForKakaoRefund(paymentEntityDto));
                     return PaymentResponseDto.initFromKakaoRefundDto();
                 } else {
@@ -130,6 +131,8 @@ public class PaymentService implements PaymentUseCase {
         private Integer episodeNumber;
         private String webtoonTitle;
 
+        private Boolean validState;
+
         public static PaymentHistoryDto toHistoryDto(PaymentEntityDto paymentEntityDto) {
             return PaymentHistoryDto.builder()
                 .memberId(paymentEntityDto.getMemberId())
@@ -142,6 +145,7 @@ public class PaymentService implements PaymentUseCase {
                 .blockLossType(paymentEntityDto.getBlockLossType())
                 .episodeNumber(paymentEntityDto.getEpisodeNumber())
                 .webtoonTitle(paymentEntityDto.getWebtoonTitle())
+                .validState(paymentEntityDto.getValidState())
                 .build();
         }
     }
@@ -220,6 +224,8 @@ public class PaymentService implements PaymentUseCase {
         private Integer episodeNumber;
         private String webtoonTitle;
 
+        private Boolean validState;
+
         public static PaymentEntityDto initForKakaoApprove(PaymentReceiptDto receipt, KakaoPayApproveDto response) {
             return PaymentEntityDto.builder()
                 .tid(receipt.getTid())
@@ -232,6 +238,7 @@ public class PaymentService implements PaymentUseCase {
                 .paymentMethod(response.getPayment_method_type())
                 .blockGainType(BlockGainType.CASH)
                 .blockLossType(BlockLossType.NONE)
+                .validState(Boolean.TRUE)
                 .paymentCompany("kakao")
                 .build();
         }
@@ -249,6 +256,7 @@ public class PaymentService implements PaymentUseCase {
                 .blockGainType(BlockGainType.NONE)
                 .blockLossType(BlockLossType.REFUND)
                 .paymentCompany("kakao")
+                .validState(entityDto.getValidState())
                 .build();
         }
 
@@ -267,6 +275,7 @@ public class PaymentService implements PaymentUseCase {
                 .paymentCompany(entity.getPaymentCompany())
                 .episodeNumber(entity.getEpisodeNumber())
                 .webtoonTitle(entity.getWebtoonTitle())
+                .validState(entity.getValidState())
                 .build();
         }
 
@@ -283,6 +292,7 @@ public class PaymentService implements PaymentUseCase {
                 .blockGainType(BlockGainType.findByValue(query.getType()))
                 .blockLossType(BlockLossType.NONE)
                 .paymentCompany("blockPage")
+                .validState(Boolean.TRUE)
                 .build();
         }
 
@@ -301,6 +311,7 @@ public class PaymentService implements PaymentUseCase {
                 .paymentCompany("blockPage")
                 .episodeNumber(query.getEpisodeNumber())
                 .webtoonTitle(query.getWebtoonTitle())
+                .validState(Boolean.TRUE)
                 .build();
         }
     }
