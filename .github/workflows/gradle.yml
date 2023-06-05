@@ -29,8 +29,10 @@ jobs:
       env:
         spring.datasource.master.jdbc-url: ${{ secrets.DB_MASTER_URL }}
         spring.datasource.slave.jdbc-url: ${{ secrets.DB_SLAVE_URL }}
-        spring.datasource.username: ${{ secrets.DB_USERNAME }}
-        spring.datasource.password: ${{ secrets.DB_PASSWORD }}
+        spring.datasource.master.username: ${{ secrets.DB_USERNAME }} 
+        spring.datasource.slave.username: ${{ secrets.DB_USERNAME }}
+        spring.datasource.master.password: ${{ secrets.DB_PASSWORD }}
+        spring.datasource.slave.password: ${{ secrets.DB_PASSWORD }}
         kakao.pay.api.key: ${{ secrets.KAKAO_PAY_API_KEY }}
         kakao.pay.api.url: ${{ secrets.KAKAO_PAY_API_URL }}
         eureka.client.service-url.defaultZone: ${{ secrets.EUREKA_DEFAULT_ZONE }}
