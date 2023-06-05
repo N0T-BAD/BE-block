@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BlockService implements BlockUseCase {
 
     private final BlockPersistencePort blockPersistencePort;
@@ -34,7 +33,6 @@ public class BlockService implements BlockUseCase {
     }
 
     @Override
-    @Transactional
     public void createBlock(ChargeBlockQuery query) {
         Block block = Block.initBlockForCharge(query);
         switch (BlockGainType.findByValue(query.getType())) {
@@ -49,7 +47,6 @@ public class BlockService implements BlockUseCase {
     }
 
     @Override
-    @Transactional
     public void consumeBlock(UpdateBlockQuery query) {
         List<BlockEntity> blockEntityList = blockPersistencePort.updateBlockQuantity(query.getMemberId());
         List<Block> blocks = blockEntityList.stream()
