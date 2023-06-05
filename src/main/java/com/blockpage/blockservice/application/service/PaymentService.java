@@ -38,7 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class PaymentService implements PaymentUseCase {
 
     private final PaymentPersistencePort paymentPersistencePort;
@@ -47,7 +46,7 @@ public class PaymentService implements PaymentUseCase {
     private final BlockPersistencePort blockPersistencePort;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = false)
     public PaymentResponseDto paymentQuery(PaymentQuery query) {
         switch (query.getType()) {
             case KAKAO_PAY_READY -> {
