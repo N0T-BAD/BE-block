@@ -46,7 +46,6 @@ public class PaymentService implements PaymentUseCase {
     private final BlockPersistencePort blockPersistencePort;
 
     @Override
-    @Transactional(readOnly = false)
     public PaymentResponseDto paymentQuery(PaymentQuery query) {
         switch (query.getType()) {
             case KAKAO_PAY_READY -> {
