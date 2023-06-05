@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -19,11 +20,13 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     private final BlockRepository blockRepository;
 
     @Override
+    @Transactional
     public void saveBlock(Block block) {
         blockRepository.save(BlockEntity.toEntity(block));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Block> getMemberBlock(String memberId) {
         List<BlockEntity> blockEntities = blockRepository.findByMemberId(memberId);
         return blockEntities.stream()
@@ -32,6 +35,7 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Block getBlockByOrderId(String orderId) {
         BlockEntity entity = blockRepository.findByOrderId(orderId)
             .orElseThrow(() -> new BusinessException(WRONG_ORDER_ID_ERROR.getMessage(), WRONG_ORDER_ID_ERROR.getHttpStatus()));
@@ -39,11 +43,13 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     }
 
     @Override
+    @Transactional
     public List<BlockEntity> updateBlockQuantity(String memberId) {
         return blockRepository.findByMemberId(memberId);
     }
 
     @Override
+    @Transactional
     public void deleteBlockByOrderId(String orderId) {
         blockRepository.deleteByOrderId(orderId);
     }
