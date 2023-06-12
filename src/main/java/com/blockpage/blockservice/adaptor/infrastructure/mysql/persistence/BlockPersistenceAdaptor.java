@@ -35,7 +35,7 @@ public class BlockPersistenceAdaptor implements BlockPersistencePort {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public Block getBlockByOrderId(String orderId) {
         BlockEntity entity = blockRepository.findByOrderId(orderId)
             .orElseThrow(() -> new BusinessException(WRONG_ORDER_ID_ERROR.getMessage(), WRONG_ORDER_ID_ERROR.getHttpStatus()));

@@ -27,7 +27,7 @@ public class PaymentPersistenceAdaptor implements PaymentPersistencePort {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public PaymentEntityDto getPaymentByOrderId(String orderId) {
         PaymentEntity paymentEntity = paymentRepository.findByOrderId(orderId)
             .orElseThrow(
