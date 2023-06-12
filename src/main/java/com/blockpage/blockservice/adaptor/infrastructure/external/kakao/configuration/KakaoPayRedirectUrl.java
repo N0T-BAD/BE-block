@@ -7,11 +7,11 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum KakaoPayRedirectUrl {
 
-    KAKAO_APPROVAL_URL("https://blockpage-eta.vercel.app/chargeresult", "결제 승인"),
+    KAKAO_APPROVAL_URL("http://localhost:3000/chargeresult", "결제 승인"),
 
-    KAKAO_CANCEL_URL("https://blockpage-eta.vercel.app/blockcharge", "결제 취소"),
+    KAKAO_CANCEL_URL("http://localhost:3000/blockcharge", "결제 취소"),
 
-    KAKAO_FAIL_URL("https://blockpage-eta.vercel.app/blockcharge", "결제 실패"),
+    KAKAO_FAIL_URL("http://localhost:3000/blockcharge", "결제 실패"),
     ;
 
     private String url;
