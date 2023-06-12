@@ -30,6 +30,8 @@ public class PaymentHistoryView {
 
     private Boolean validState;
 
+    private Boolean expiredState;
+
     public PaymentHistoryView(PaymentHistoryDto paymentHistoryDto) {
         this.memberId = paymentHistoryDto.getMemberId();
         this.totalAmount = paymentHistoryDto.getTotalAmount() == 0 ? null : paymentHistoryDto.getTotalAmount();
@@ -39,6 +41,7 @@ public class PaymentHistoryView {
             paymentHistoryDto.getBlockLossType() != BlockLossType.NONE ? paymentHistoryDto.getBlockLossType().getView() : null;
         this.blockQuantity = paymentHistoryDto.getBlockQuantity();
         this.paymentTime = paymentHistoryDto.getPaymentTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        this.expiredState = paymentHistoryDto.getPaymentTime().plusDays(3).isBefore(LocalDateTime.now());
         this.episodeBMDetail =
             paymentHistoryDto.getEpisodeNumber() != null ? paymentHistoryDto.getWebtoonTitle() + " " + paymentHistoryDto.getEpisodeNumber()
                 .toString() + "화" : null;
